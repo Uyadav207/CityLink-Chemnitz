@@ -1,0 +1,21 @@
+{
+  "name": "citylink_server",
+  "version": "1.0.0",
+  "description": "\"CityLink is a map application for discovering facilities among chemnitz\"",
+  "main": "./src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "\"Utkarsh Yadav and Nithin Valiyaveedu\"",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "prisma": "^5.14.0"
+  }
+}
