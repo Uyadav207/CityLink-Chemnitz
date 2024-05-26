@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: city
+      POSTGRES_PASSWORD: citylinktuc
+      POSTGRES_DB: citylink
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+    command: npm start
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+
+  server:
+    build: ./server
+    ports:
+      - '8000:8000'
+    env_file:
+      - ./server/.env
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
