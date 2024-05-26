@@ -9,9 +9,6 @@ router.post('/auth', async (req, res) => {
     const { username, password, firstName, lastName, address, phoneNo, email} = req.body;
   
     try {
-
-    const existingUser = await prisma.user.findUnique({where: {username}});
-    if (existingUser) return res.status(400).json({error: 'Username Already Existed'});
       const hashedPassword = await bcrypt.hash(password, 10);
   
       const user = await prisma.user.create({
