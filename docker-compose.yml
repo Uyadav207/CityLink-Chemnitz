@@ -1,17 +1,14 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:latest
+  db:
+    image: "postgres"
     environment:
-      POSTGRES_USER: city
-      POSTGRES_PASSWORD: citylinktuc
-      POSTGRES_DB: citylink
+      POSTGRES_USER: "city"
+      POSTGRES_PASSWORD: "citylinktuc"
+      POSTGRES_DB: "citylink"
     ports:
       - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   client:
     build:
@@ -30,10 +27,9 @@ services:
     build: ./server
     ports:
       - '8000:8000'
-    env_file:
-      - ./server/.env
+    environment:
+      DATABASE_URL: "postgresql://city:citylinktuc@db:5432/citylink?schema=public"
+      JWT_SECRET: "citylinktucsecret"
+      PORT: 8000
     depends_on:
-      - postgres
-
-volumes:
-  postgres_data:
+      - db
