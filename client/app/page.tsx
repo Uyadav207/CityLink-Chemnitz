@@ -16,7 +16,7 @@ const Home = () => {
           <div className="max-w-md">
             <h1 className="mb-5 text-5xl font-bold">City Link Chemnitz</h1>
             <p className="mb-5">Easy way to access public services</p>
-            <Link href="/login" className="btn btn-primary">
+            <Link href="/signUp" className="btn btn-primary">
               Get Started
             </Link>
           </div>
