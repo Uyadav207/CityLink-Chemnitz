@@ -1,13 +1,7 @@
-import React from 'react';
+import UserLogin from '../components/UserLogin';
 
 const Login = () => {
-  return (
-    <div className="mockup-window border border-base-300">
-      <div className="flex justify-center px-4 py-16 border-t border-base-300">
-        Login Page!
-      </div>
-    </div>
-  );
+  return <UserLogin />;
 };
 
 export default Login;
