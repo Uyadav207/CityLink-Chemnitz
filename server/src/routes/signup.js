@@ -6,20 +6,20 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 router.post('/auth', async (req, res) => {
-    const { username, password, firstName, lastName, address, phoneNo, email} = req.body;
+    const { username, password, firstName, lastName, email, phoneNo} = req.body;
   
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
-  
+
+      // Create user in the database
       const user = await prisma.user.create({
         data: {
           username,
           password: hashedPassword,
           firstName,
           lastName,
-          address,
-          phoneNo,
-          email
+          email,
+          phoneNo
         },
       });
   
