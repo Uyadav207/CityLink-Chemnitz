@@ -1,14 +1,7 @@
-<<<<<<< HEAD
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
-=======
-'use client'
-import Link from 'next/link';
-import Navbar from './components/Navbar/Navbar';
-// import Banner from '../public/assets/banner.mp4';
->>>>>>> f519d0d (feat: add React google Maps)
 
 const Home: React.FC = () => {
   return (
