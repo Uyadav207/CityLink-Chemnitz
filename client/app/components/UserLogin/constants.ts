@@ -1,7 +1,4 @@
 import * as yup from 'yup';
-import YupPassword from 'yup-password';
-
-YupPassword(yup);
 
 const INITIAL_VALUES = {
   Username: '',

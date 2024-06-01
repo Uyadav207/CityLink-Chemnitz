@@ -12,13 +12,16 @@ export const Input = ({ ...props }) => (
     <label className="label">
       <span className="label-text">{props.label}</span>
     </label>
-    <Field {...props} className="input input-bordered" />
+    <Field {...props} className={`input input-bordered ${props.className}`} />
     <ErrorField name={props.name} />
   </div>
 );
 
 export const PhoneNumberInput = ({ ...props }) => (
   <>
+    <label className="label">
+      <span className="label-text">{props.label}</span>
+    </label>
     <Field name="phoneNumber">
       {({ form: { setFieldValue } }: { form: any }) => (
         <PhoneInput
