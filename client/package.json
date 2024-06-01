@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+=======
+    "@vis.gl/react-google-maps": "^1.0.2",
+>>>>>>> f519d0d (feat: add React google Maps)
     "axios": "^1.7.2",
     "formik": "^2.4.6",
     "next": "14.2.3",
