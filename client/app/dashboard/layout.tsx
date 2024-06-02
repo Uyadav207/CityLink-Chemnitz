@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getUserTokenFromLocalStorage } from '../helpers/crypto';
@@ -19,19 +17,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const authToken = getUserTokenFromLocalStorage();
-  useEffect(() => {
-    console.log(authToken);
-    if (!authToken) {
-      console.log('hereeee');
+  // const authToken = getUserTokenFromLocalStorage();
+  // useEffect(() => {
+  //   console.log(authToken);
+  //   if (!authToken) {
+  //     console.log('hereeee');
 
-      toast.error('You are not authorized to view this page');
+  //     toast.error('You are not authorized to view this page');
 
-      // redirect('/login');
-    }
-  }, []);
-  if (authToken) {
-    return <div className={inter.className}>{children}</div>;
-  }
-  return <p>Access Denied</p>;
+  //     // redirect('/login');
+  //   }
+  // }, []);
+  // if (authToken) {
+  return <div>{children}</div>;
+
+  // return <></>;
 }

@@ -1,9 +1,29 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { getUserTokenFromLocalStorage } from '../helpers/crypto';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:8080',
 });
+
+// Request interceptor
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Modify the request config here (add headers, authentication tokens)
+    const accessToken = getUserTokenFromLocalStorage();
+    // If token is present add it to request's Authorization Header
+    if (accessToken) {
+      if (config.headers)
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    // Handle request errors here
+    return Promise.reject(error);
+  }
+);
+// End of Request interceptor
 
 axiosInstance.interceptors.response.use(
   (response) => {

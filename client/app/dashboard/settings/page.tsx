@@ -4,6 +4,7 @@ import { Input, PhoneNumberInput } from '@/app/components/Inputs';
 import React, { useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useUserStore from '../../store/userStore';
 
 import { Form, Formik, Field, FieldArray } from 'formik';
 import {
@@ -15,6 +16,9 @@ import {
 
 const Settings = () => {
   const [toggle, setToggle] = useState(false);
+  const { userData } = useUserStore();
+  console.log(userData);
+
   return (
     <div className="w-full p-6 mx-auto ">
       <div className="flex flex-wrap">
