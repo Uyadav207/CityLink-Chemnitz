@@ -7,7 +7,9 @@ const authenticateJWT = require("../middleware/authMiddleware");
 // Get all users
 router.get("/", authenticateJWT, async (req, res) => {
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            include: { addresses: true, favouriteCategories: true } 
+        });
         res.json({ message: "Users retrieved successfully", users });
     } catch (error) {
         res
@@ -54,6 +56,7 @@ router.get("/deleted", authenticateJWT, async (req, res) => {
     try {
         const users = await prisma.user.findMany({
             where: { isDeleted: true },
+            include: { addresses: true, favouriteCategories: true } 
         });
 
         if (!users) {
