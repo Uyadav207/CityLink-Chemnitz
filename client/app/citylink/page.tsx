@@ -15,6 +15,8 @@ import {
     Kindertageseinrichtungen,
 } from "../api/apiConfig";
 
+import Sidebar from "../components/Sidebar";
+
 
 interface Feature {
     geometry: { y: number; x: number }; 
@@ -53,13 +55,15 @@ const App: React.FC = () => {
     };
 
     return (
+        <div className="flex">
+        <Sidebar />
         <APIProvider apiKey="AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc">
             <Map
-                style={{ width: "100vw", height: "100vh" }}
+                style={{ width: "100vw", height: "100vh", borderRadius: "50px" }}
                 defaultCenter={{ lat: 50.827847, lng: 12.92137 }}
                 defaultZoom={12}
                 gestureHandling={"greedy"}
-                disableDefaultUI={true}
+                disableDefaultUI={false}
                 mapId="bd61128fe6c5f1e5"
             >
                 <MapControl position={ControlPosition.TOP_CENTER}>
@@ -95,6 +99,7 @@ const App: React.FC = () => {
                 )}
             </Map>
         </APIProvider>
+        </div>
     );
 };
 
