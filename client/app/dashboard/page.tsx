@@ -1,7 +1,11 @@
 import React from 'react';
 
 const Dashboard = () => {
-  return <div>Maps display area</div>;
+  return (
+    <>
+      <h1>Maps display area</h1>
+    </>
+  );
 };
 
 export default Dashboard;

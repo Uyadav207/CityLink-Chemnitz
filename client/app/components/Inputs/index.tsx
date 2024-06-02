@@ -22,11 +22,11 @@ export const PhoneNumberInput = ({ ...props }) => (
     <label className="label">
       <span className="label-text">{props.label}</span>
     </label>
-    <Field name="phoneNumber">
+    <Field name="PhoneNumber">
       {({ form: { setFieldValue } }: { form: any }) => (
         <PhoneInput
           {...props}
-          onChange={(value) => setFieldValue('phoneNumber', value)}
+          onChange={(value) => setFieldValue('PhoneNumber', value)}
         />
       )}
     </Field>
