@@ -24,9 +24,15 @@ axiosInstance.interceptors.response.use(
       } else if (err.response && err.response.status === 404) {
         // toast.error("Invalid Endpoint. Try again");
         // return false;
+      } else if (err.response && err.response.status === 404) {
+        // toast.error("Invalid Endpoint. Try again");
+        // return false;
+      } else if (err.response && err.response.status === 400) {
+        toast.error(err.response.data.error);
+        // return false;
       } else if (err.response && err.response.status === 500) {
         // toast.error("Internal Server Error");
-        console.error('Internal Server Error');
+        toast.error('Internal Server Error');
         return false;
       } else if (err.response && err.response.status === 401) {
         toast.error(err.response.data.error);

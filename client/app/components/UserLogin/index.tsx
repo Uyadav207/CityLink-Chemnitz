@@ -1,24 +1,32 @@
 'use client';
 
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Form, Formik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { authApis } from '../../api/auth';
 
-import { loginApi } from '../../api/auth';
 import { Input } from '../Inputs';
 import { Loader } from '../Loader';
 
 import { INITIAL_VALUES, VALIDATION } from './constants';
+import { storeUserTokenInLocalStorage } from '../../helpers/crypto.js';
 
 const UserLogin = () => {
+  const router = useRouter();
   const [loader, setLoader] = useState(false);
 
   const handleLogin = async (values: any) => {
     try {
       setLoader(true);
-      await loginApi.login({
+      const response = await authApis.login({
         username: values.Username,
         password: values.Password,
       });
+      // console.log(response.data.message);
+      toast.success(response.data.message);
+      storeUserTokenInLocalStorage(response.data.token);
+      router.push('/dashboard/settings');
     } catch (err: any) {
       console.log('erorr', err.response);
     } finally {
