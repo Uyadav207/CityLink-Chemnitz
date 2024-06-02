@@ -6,27 +6,39 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 router.post('/auth', async (req, res) => {
-    const { username, password, firstName, lastName, email, phoneNo} = req.body;
-  
+    const { username, password, firstName, lastName, email, phoneNo } = req.body;
+
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
+        // Check if the username already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { username: username },
+            include: { addresses: true, favouriteCategories: true } 
+        });
 
-      // Create user in the database
-      const user = await prisma.user.create({
-        data: {
-          username,
-          password: hashedPassword,
-          firstName,
-          lastName,
-          email,
-          phoneNo
-        },
-      });
-  
-      res.status(201).json({ message: 'User created', user });
+        if (existingUser) {
+            return res.status(409).json({ message: 'Username already taken' });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create user in the database
+        const user = await prisma.user.create({
+            data: {
+                username,
+                password: hashedPassword,
+                firstName,
+                lastName,
+                email,
+                phoneNo,
+            },
+        });
+
+        res.status(201).json({ message: 'User created', user });
     } catch (error) {
-      res.status(400).json({ error: 'User creation failed', details: error.message });
+        console.error('Error creating user:', error);
+        res.status(500).json({ error: 'Internal server error', details: error.message });
     }
-  });
+});
 
-  module.exports = router;
+module.exports = router;

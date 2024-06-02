@@ -13,6 +13,7 @@ router.post('/auth', async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { username },
+      include: { addresses: true, favouriteCategories: true } 
     });
 
     if (!user) {
@@ -34,8 +35,9 @@ router.post('/auth', async (req, res) => {
       expiresIn: '1h',
     });
 
-    res.json({ message: 'Login successful', token, user });
+    res.json({ message: 'Login successful', token, user});
   } catch (error) {
+    console.error('Error during login:', error);
     res.status(500).json({ error: 'Login failed', details: error.message });
   }
 });
