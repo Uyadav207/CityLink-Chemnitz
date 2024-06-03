@@ -31,10 +31,10 @@ const UserLogin = () => {
       console.log(response.data.message);
       toast.success(response.data.message);
       console.log(response.data.token, response.data.user);
-
       storeUserTokenInLocalStorage(response.data.token);
       setUser(response.data.user);
-      router.push('/dashboard/settings');
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      router.push('/dashboard/citylink');
     } catch (err: any) {
       console.log('erorr', err.response);
     } finally {
