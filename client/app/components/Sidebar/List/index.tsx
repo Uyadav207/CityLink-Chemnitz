@@ -8,33 +8,6 @@ const List: React.FC = () => {
         <li className="mb-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer flex">
           <div className="w-12 h-12 bg-gray-300 rounded-full mr-3"></div>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold">Verein zur Beruflichen Förderung und Ausbildung e. V.</h1>
-            <p className="text-sm text-gray-500">
-              0.5mi, <span>Open Till 6PM</span>
-            </p>
-          </div>
-        </li>
-        <li className="mb-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer flex">
-          <div className="w-12 h-12 bg-gray-300 rounded-full mr-3"></div>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold">Stadtmission Chemnitz e. V.</h1>
-            <p className="text-sm text-gray-500">
-              0.5mi, <span>Open Till 6PM</span>
-            </p>
-          </div>
-        </li>
-        <li className="mb-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer flex">
-          <div className="w-12 h-12 bg-gray-300 rounded-full mr-3"></div>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold">Stadtmission Chemnitz e. V.</h1>
-            <p className="text-sm text-gray-500">
-              0.5mi, <span>Open Till 6PM</span>
-            </p>
-          </div>
-        </li>
-        <li className="mb-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer flex">
-          <div className="w-12 h-12 bg-gray-300 rounded-full mr-3"></div>
-          <div className="flex flex-col">
             <h1 className="text-sm font-bold">Stadtmission Chemnitz e. V.</h1>
             <p className="text-sm text-gray-500">
               0.5mi, <span>Open Till 6PM</span>

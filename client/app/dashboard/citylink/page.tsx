@@ -14,10 +14,11 @@ import {
   Schulsozialarbeit,
   Jugendberufshilfe,
   Kindertageseinrichtungen,
-} from "../api/apiConfig";
+} from "../../api/apiConfig";
 import calculateDistance from "./Distance";
-import Sidebar from "../components/Sidebar";
-import AddressDropDown from "../components/Sidebar/AddressDropDown";
+import Sidebar from "../../components/Sidebar";
+import AddressDropDown from "../../components/Sidebar/AddressDropDown";
+import convertHomeAddress from "./ConvertAddress";
 
 interface Coordinates {
   lat: number;
@@ -34,24 +35,11 @@ interface HomeAddress {
   name: string;
 }
 
-const homeAddress: HomeAddress[] = [
-  {
-    id: 1,
-    name: "vettersstr. 70, 09126, Chemnitz, Germany",
-  },
-  {
-    id: 2,
-    name: "vettersstr. 66, 09126, Chemnitz, Germany",
-  },
-  {
-    id: 3,
-    name: "vettersstr. 54, 09126, Chemnitz, Germany",
-  },
-  {
-    id: 4,
-    name: "vettersstr. 72, 09126, Chemnitz, Germany",
-  },
-];
+
+const userData: any = localStorage.getItem('user');
+const user = JSON.parse(userData);
+const addresses = convertHomeAddress(user.addresses);
+const homeAddress: HomeAddress[] = addresses;
 
 const apiKey = "AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc";
 
@@ -120,11 +108,11 @@ const App: React.FC = () => {
       <Sidebar />
       <APIProvider apiKey={apiKey}>
         <Map
-          style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100vw", height: "100vh" , borderRadius: 10}}
           defaultCenter={{ lat: 50.827847, lng: 12.92137 }}
           defaultZoom={12}
           gestureHandling="greedy"
-          disableDefaultUI={false}
+          disableDefaultUI={true}
           mapId="bd61128fe6c5f1e5"
         >
           <MapControl position={ControlPosition.TOP_CENTER}>
