@@ -22,7 +22,7 @@ export const Scaleloader = () => (
 );
 
 export const Loader = () => (
-  <div className="absolute bg-white bg-opacity-60 z-10 h-full w-full flex border items-center justify-center">
+  <div className="absolute bg-white bg-opacity-60 z-10 h-full w-full flex items-center justify-center">
     <HashLoader color="#36d7b7" />
   </div>
 );
