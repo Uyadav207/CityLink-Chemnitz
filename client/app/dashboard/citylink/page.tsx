@@ -16,11 +16,12 @@ import {
   Kindertageseinrichtungen,
 } from '../../api/apiConfig';
 
-import Sidebar from "../../components/Sidebar";
-import AddressDropDown from "../../components/Sidebar/AddressDropDown";
-import convertHomeAddress from "./ConvertAddress";
-import useDataStore from "@/app/store/mapStore";
-import mapApiUri from "../../api/mapApi";
+import { useUserStore } from '@/app/store/userStore';
+import Sidebar from '../../components/Sidebar';
+import AddressDropDown from '../../components/Sidebar/AddressDropDown';
+import convertHomeAddress from './ConvertAddress';
+import useDataStore from '@/app/store/mapStore';
+import mapApiUri from '../../api/mapApi';
 
 interface Coordinates {
   lat: number;
@@ -37,11 +38,6 @@ interface HomeAddress {
   name: string;
 }
 
-const userData: any = localStorage.getItem('user') || '';
-const user = JSON.parse(userData);
-const addresses = convertHomeAddress(user.addresses);
-const homeAddress: HomeAddress[] = addresses;
-
 const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
 
 const getGeocode = async (address: string, apiKey: string) => {
@@ -56,6 +52,10 @@ const getGeocode = async (address: string, apiKey: string) => {
 };
 
 const App: React.FC = () => {
+  const { userData }: any = useUserStore();
+  const user = userData;
+  const addresses = convertHomeAddress(user?.addresses) || '';
+  const homeAddress: HomeAddress[] = addresses || [];
   const [features, setFeatures] = useState<Feature[]>([]);
   const [api, setApi] = useState<string>(Jugendberufshilfe);
   const [info, setInfo] = useState<{ [key: string]: any }>({});
@@ -87,8 +87,6 @@ const App: React.FC = () => {
   // Add the distance calculated from the current location to the new Object
   // Store the new obj to the zustand store dataAPi and populate ever where
 
-
-
   const showInfoOnClick = (obj: { [key: string]: any }) => {
     setInfo(obj);
     setIsModalOpen(true);
@@ -106,7 +104,6 @@ const App: React.FC = () => {
   //   setInfo({ ...obj, distance });
   //   setIsModalOpen(true);
   // };
-
 
   const handleApiTrigger = (requestedAPI: string) => {
     setApi(requestedAPI);
@@ -170,7 +167,7 @@ const App: React.FC = () => {
           <MapControl position={ControlPosition.BOTTOM_CENTER}>
             <div className="flex p-2 justify-between space-x-4">
               <AddressDropDown>
-                {homeAddress.map((item) => (
+                {homeAddress?.map((item) => (
                   <li key={item.id} className="menu-title">
                     <button
                       onClick={() => handleClickGeolocation(item.name)}
@@ -191,9 +188,7 @@ const App: React.FC = () => {
                 lat: feature.geometry.y,
                 lng: feature.geometry.x,
               }}
-              onClick={() =>
-                showInfoOnClick(feature.attributes)
-              }
+              onClick={() => showInfoOnClick(feature.attributes)}
             ></AdvancedMarker>
           ))}
           {coordinates && (
