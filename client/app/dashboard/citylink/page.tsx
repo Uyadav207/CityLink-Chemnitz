@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   APIProvider,
   Map,
@@ -8,19 +8,19 @@ import {
   MapControl,
   ControlPosition,
   Pin,
-} from "@vis.gl/react-google-maps";
+} from '@vis.gl/react-google-maps';
 import {
   schule,
   Schulsozialarbeit,
   Jugendberufshilfe,
   Kindertageseinrichtungen,
-} from "../../api/apiConfig";
-import calculateDistance from "./Distance";
-import Sidebar from "../../components/Sidebar";
-import AddressDropDown from "../../components/Sidebar/AddressDropDown";
-import convertHomeAddress from "./ConvertAddress";
-import useDataStore from "@/app/store/mapStore";
-import mapApiUri from "../../api/mapApi";
+} from '../../api/apiConfig';
+import calculateDistance from './Distance';
+import Sidebar from '../../components/Sidebar';
+import AddressDropDown from '../../components/Sidebar/AddressDropDown';
+import convertHomeAddress from './ConvertAddress';
+import useDataStore from '@/app/store/mapStore';
+import mapApiUri from '../../api/mapApi';
 
 interface Coordinates {
   lat: number;
@@ -37,21 +37,21 @@ interface HomeAddress {
   name: string;
 }
 
-const userData: any = localStorage.getItem("user");
+const userData: any = localStorage.getItem('user') || '';
 const user = JSON.parse(userData);
 const addresses = convertHomeAddress(user.addresses);
 const homeAddress: HomeAddress[] = addresses;
 
-const apiKey = "AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc";
+const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
 
 const getGeocode = async (address: string, apiKey: string) => {
   const response = await fetch(mapApiUri(address, apiKey));
   const data = await response.json();
-  if (data.status === "OK") {
+  if (data.status === 'OK') {
     const { lat, lng } = data.results[0].geometry.location;
     return { lat, lng };
   } else {
-    throw new Error("Geocoding failed");
+    throw new Error('Geocoding failed');
   }
 };
 
@@ -73,7 +73,7 @@ const App: React.FC = () => {
         setFeatures(data.features);
         setData(data.features);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
     fetchData();
@@ -81,7 +81,7 @@ const App: React.FC = () => {
   }, [api, address]);
 
   // Call api from the external services
-  // Add the api response to a new object 
+  // Add the api response to a new object
   // Add the distance calculated from the current location to the new Object
   // Store the new obj to the zustand store dataAPi and populate ever where
 
@@ -108,7 +108,7 @@ const App: React.FC = () => {
       const coords: Coordinates = await getGeocode(address, apiKey);
       setCoordinates(coords);
     } catch (error) {
-      console.error("Error fetching geocode:", error);
+      console.error('Error fetching geocode:', error);
     }
   };
 
@@ -121,7 +121,7 @@ const App: React.FC = () => {
       <Sidebar />
       <APIProvider apiKey={apiKey}>
         <Map
-          style={{ width: "100vw", height: "100vh", borderRadius: 10 }}
+          style={{ width: '100vw', height: '100vh', borderRadius: 10 }}
           defaultCenter={{ lat: 50.827847, lng: 12.92137 }}
           defaultZoom={12}
           gestureHandling="greedy"
@@ -194,9 +194,9 @@ const App: React.FC = () => {
               }}
             >
               <Pin
-                background={"#FBBC04"}
-                glyphColor={"#000"}
-                borderColor={"#000"}
+                background={'#FBBC04'}
+                glyphColor={'#000'}
+                borderColor={'#000'}
               />
             </AdvancedMarker>
           )}
