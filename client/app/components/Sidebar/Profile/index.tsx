@@ -10,6 +10,7 @@ import RandomAvatar from "../../RandomAvatar";
 const userData: any = localStorage.getItem('user');
 const user = JSON.parse(userData);
 
+
 const Profile:React.FC = () => {
 
 return (

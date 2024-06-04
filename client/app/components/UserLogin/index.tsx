@@ -19,8 +19,6 @@ const UserLogin = () => {
   const [loader, setLoader] = useState(false);
   const { userData, setUser } = useUserStore();
 
-  console.log(userData);
-
   const handleLogin = async (values: any) => {
     try {
       setLoader(true);
@@ -28,9 +26,7 @@ const UserLogin = () => {
         username: values.Username,
         password: values.Password,
       });
-      console.log(response.data.message);
       toast.success(response.data.message);
-      console.log(response.data.token, response.data.user);
       storeUserTokenInLocalStorage(response.data.token);
       setUser(response.data.user);
       localStorage.setItem('user', JSON.stringify(response.data.user));
