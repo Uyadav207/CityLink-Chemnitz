@@ -15,7 +15,6 @@ import {
   Jugendberufshilfe,
   Kindertageseinrichtungen,
 } from "../../api/apiConfig";
-import calculateDistance from "./Distance";
 import Sidebar from "../../components/Sidebar";
 import AddressDropDown from "../../components/Sidebar/AddressDropDown";
 import convertHomeAddress from "./ConvertAddress";
@@ -60,10 +59,12 @@ const App: React.FC = () => {
   const [api, setApi] = useState<string>(Jugendberufshilfe);
   const [info, setInfo] = useState<{ [key: string]: any }>({});
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [address, setAddress] = useState<string>(homeAddress[0].name);
+  const [address, setAddress] = useState<string>(homeAddress[0]?.name ?? '');
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
-  const { setData } = useDataStore();
+  const { setHomeCoords, setData } = useDataStore();
+
+  // const distance: any = calculateDistance(geometry.y, geometry.x, coordinates!.lat, coordinates!.lng).toFixed(2);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,19 +86,26 @@ const App: React.FC = () => {
   // Add the distance calculated from the current location to the new Object
   // Store the new obj to the zustand store dataAPi and populate ever where
 
-  const showInfoOnClick = (
-    obj: { [key: string]: any },
-    geometry: { [key: string]: any }
-  ) => {
-    const distance: any = calculateDistance(
-      geometry.y,
-      geometry.x,
-      coordinates!.lat,
-      coordinates!.lng
-    ).toFixed(2);
-    setInfo({ ...obj, distance });
+
+
+  const showInfoOnClick = (obj: { [key: string]: any }) => {
+    setInfo(obj);
     setIsModalOpen(true);
   };
+
+  // const showInfoOnClick = (
+  //   obj: { [key: string]: any }
+  // ) => {
+  //   const distance: any = calculateDistance(
+  //     geometry.y,
+  //     geometry.x,
+  //     coordinates!.lat,
+  //     coordinates!.lng
+  //   ).toFixed(2);
+  //   setInfo({ ...obj, distance });
+  //   setIsModalOpen(true);
+  // };
+
 
   const handleApiTrigger = (requestedAPI: string) => {
     setApi(requestedAPI);
@@ -107,6 +115,7 @@ const App: React.FC = () => {
     try {
       const coords: Coordinates = await getGeocode(address, apiKey);
       setCoordinates(coords);
+      setHomeCoords(coords);
     } catch (error) {
       console.error("Error fetching geocode:", error);
     }
@@ -182,7 +191,7 @@ const App: React.FC = () => {
                 lng: feature.geometry.x,
               }}
               onClick={() =>
-                showInfoOnClick(feature.attributes, feature.geometry)
+                showInfoOnClick(feature.attributes)
               }
             ></AdvancedMarker>
           ))}
