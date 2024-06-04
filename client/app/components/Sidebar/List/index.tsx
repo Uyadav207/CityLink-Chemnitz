@@ -4,22 +4,24 @@ import useDataStore from "@/app/store/mapStore";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Search from '../Search'; 
+import calculateDistance from "./Distance";
 
 const List: React.FC = () => {
-  const { dataApi } = useDataStore();
+  const { homeCoords, dataApi } = useDataStore();
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [noResults, setNoResults] = useState(false);
 
+  console.log(homeCoords);
+
   useEffect(() => {
     if (dataApi) {
-      // Simulate a delay
+      console.log(dataApi);
       const timer = setTimeout(() => {
         setLoading(false);
-      }, 2000); // 2 seconds delay
-
-      return () => clearTimeout(timer); // Clean up the timer on unmount
+      }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [dataApi]);
 
@@ -71,15 +73,17 @@ const List: React.FC = () => {
     );
   }
 
+  console.log(filteredData)
+
   return (
-    <div>
+    <div className="vh-100">
       <Search value={searchTerm} onChange={handleSearch} />
       {noResults ? (
-        <div className="text-center py-4 text-gray-600">
+        <div className="text-center py-4 text-gray-600 w-full">
           No results found.
         </div>
       ) : (
-        <div className="overflow-auto h-[90vh]">
+        <div className="overflow-auto">
         <ul className="bordered-list">
           {filteredData.map((data: any, index: number) => (
             <li
@@ -89,7 +93,7 @@ const List: React.FC = () => {
               <div className="flex flex-col w-full">
                 <h1 className="text-sm font-bold truncate">{data.attributes.TRAEGER}</h1>
                 <p className="text-sm text-gray-500 truncate">
-                  10 Km, <span className="truncate">{data.attributes.STRASSE}</span>
+                  <span className="text-green-400">{calculateDistance(data.geometry.y, data.geometry.x, homeCoords.lat, homeCoords.lng).toFixed(2)} Km</span><span className="text-black"> • </span><span className="truncate">{data.attributes.STRASSE}</span>
                 </p>
               </div>
             </li>
