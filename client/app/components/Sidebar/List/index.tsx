@@ -79,7 +79,7 @@ const List: React.FC = () => {
     <div className="vh-100">
       <Search value={searchTerm} onChange={handleSearch} />
       {noResults ? (
-        <div className="text-center py-4 text-gray-600 w-full">
+        <div className="text-center py-4 text-gray-600">
           No results found.
         </div>
       ) : (

@@ -44,3 +44,26 @@ enum UserType {
   REGULAR
   SUPER
 }
+
+
+model Apischule {
+  id       Int      @id @default(autoincrement())
+  features String
+}
+
+model ApiSchulsozialarbeit {
+  id       Int      @id @default(autoincrement())
+  features String
+}
+
+model ApiKindertageseinrichtungen {
+  id       Int      @id @default(autoincrement())
+  features String
+}
+
+model ApiJugendberufshilfe {
+  id       Int      @id @default(autoincrement())
+  features String
+}
+
+
