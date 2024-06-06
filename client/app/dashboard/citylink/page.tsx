@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   APIProvider,
   Map,
@@ -8,20 +8,18 @@ import {
   MapControl,
   ControlPosition,
   Pin,
-} from '@vis.gl/react-google-maps';
+} from "@vis.gl/react-google-maps";
 import {
   schule,
   Schulsozialarbeit,
   Jugendberufshilfe,
   Kindertageseinrichtungen,
-} from '../../api/apiConfig';
-
-import { useUserStore } from '@/app/store/userStore';
-import Sidebar from '../../components/Sidebar';
-import AddressDropDown from '../../components/Sidebar/AddressDropDown';
-import convertHomeAddress from './ConvertAddress';
-import useDataStore from '@/app/store/mapStore';
-import mapApiUri from '../../api/mapApi';
+} from "../../api/apiConfig";
+import Sidebar from "../../components/Sidebar";
+import AddressDropDown from "../../components/Sidebar/AddressDropDown";
+import convertHomeAddress from "./ConvertAddress";
+import useDataStore from "@/app/store/mapStore";
+import mapApiUri from "../../api/mapApi";
 
 interface Coordinates {
   lat: number;
@@ -38,24 +36,24 @@ interface HomeAddress {
   name: string;
 }
 
-const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
+const userData: any = localStorage.getItem("user");
+const user = JSON.parse(userData);
+const addresses = convertHomeAddress(user.addresses);
+const homeAddress: HomeAddress[] = addresses;
+
+const apiKey = "AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc";
 
 const getGeocode = async (address: string, apiKey: string) => {
   const response = await fetch(mapApiUri(address, apiKey));
   const data = await response.json();
-  if (data.status === 'OK') {
+  if (data.status === "OK") {
     const { lat, lng } = data.results[0].geometry.location;
     return { lat, lng };
   } else {
-    throw new Error('Geocoding failed');
+    throw new Error("Geocoding failed");
   }
 };
-
 const App: React.FC = () => {
-  const { userData }: any = useUserStore();
-  const user = userData;
-  const addresses = convertHomeAddress(user?.addresses) || '';
-  const homeAddress: HomeAddress[] = addresses || [];
   const [features, setFeatures] = useState<Feature[]>([]);
   const [api, setApi] = useState<string>(Jugendberufshilfe);
   const [info, setInfo] = useState<{ [key: string]: any }>({});
@@ -64,9 +62,6 @@ const App: React.FC = () => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
   const { setHomeCoords, setData } = useDataStore();
-
-  // const distance: any = calculateDistance(geometry.y, geometry.x, coordinates!.lat, coordinates!.lng).toFixed(2);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,35 +70,18 @@ const App: React.FC = () => {
         setFeatures(data.features);
         setData(data.features);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchData();
     handleGeocode(address);
   }, [api, address]);
 
-  // Call api from the external services
-  // Add the api response to a new object
-  // Add the distance calculated from the current location to the new Object
-  // Store the new obj to the zustand store dataAPi and populate ever where
 
   const showInfoOnClick = (obj: { [key: string]: any }) => {
     setInfo(obj);
     setIsModalOpen(true);
   };
-
-  // const showInfoOnClick = (
-  //   obj: { [key: string]: any }
-  // ) => {
-  //   const distance: any = calculateDistance(
-  //     geometry.y,
-  //     geometry.x,
-  //     coordinates!.lat,
-  //     coordinates!.lng
-  //   ).toFixed(2);
-  //   setInfo({ ...obj, distance });
-  //   setIsModalOpen(true);
-  // };
 
   const handleApiTrigger = (requestedAPI: string) => {
     setApi(requestedAPI);
@@ -115,7 +93,7 @@ const App: React.FC = () => {
       setCoordinates(coords);
       setHomeCoords(coords);
     } catch (error) {
-      console.error('Error fetching geocode:', error);
+      console.error("Error fetching geocode:", error);
     }
   };
 
@@ -128,7 +106,7 @@ const App: React.FC = () => {
       <Sidebar />
       <APIProvider apiKey={apiKey}>
         <Map
-          style={{ width: '100vw', height: '100vh', borderRadius: 10 }}
+          style={{ width: "100vw", height: "100vh", borderRadius: 10 }}
           defaultCenter={{ lat: 50.827847, lng: 12.92137 }}
           defaultZoom={12}
           gestureHandling="greedy"
@@ -167,7 +145,7 @@ const App: React.FC = () => {
           <MapControl position={ControlPosition.BOTTOM_CENTER}>
             <div className="flex p-2 justify-between space-x-4">
               <AddressDropDown>
-                {homeAddress?.map((item) => (
+                {homeAddress.map((item) => (
                   <li key={item.id} className="menu-title">
                     <button
                       onClick={() => handleClickGeolocation(item.name)}
@@ -188,7 +166,9 @@ const App: React.FC = () => {
                 lat: feature.geometry.y,
                 lng: feature.geometry.x,
               }}
-              onClick={() => showInfoOnClick(feature.attributes)}
+              onClick={() =>
+                showInfoOnClick(feature.attributes)
+              }
             ></AdvancedMarker>
           ))}
           {coordinates && (
@@ -199,9 +179,9 @@ const App: React.FC = () => {
               }}
             >
               <Pin
-                background={'#FBBC04'}
-                glyphColor={'#000'}
-                borderColor={'#000'}
+                background={"#FBBC04"}
+                glyphColor={"#000"}
+                borderColor={"#000"}
               />
             </AdvancedMarker>
           )}
