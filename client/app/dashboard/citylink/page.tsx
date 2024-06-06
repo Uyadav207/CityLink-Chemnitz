@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   APIProvider,
   Map,
@@ -8,19 +8,19 @@ import {
   MapControl,
   ControlPosition,
   Pin,
-} from "@vis.gl/react-google-maps";
+} from '@vis.gl/react-google-maps';
 import {
   schule,
   Schulsozialarbeit,
   Jugendberufshilfe,
   Kindertageseinrichtungen,
-} from "../../api/apiConfig";
-import Sidebar from "../../components/Sidebar";
-import AddressDropDown from "../../components/Sidebar/AddressDropDown";
-import convertHomeAddress from "./ConvertAddress";
-import useDataStore from "@/app/store/mapStore";
-import mapApiUri from "../../api/mapApi";
-import useUserStore from "@/app/store/userStore";
+} from '../../api/apiConfig';
+import Sidebar from '../../components/Sidebar';
+import AddressDropDown from '../../components/Sidebar/AddressDropDown';
+import convertHomeAddress from './ConvertAddress';
+import useDataStore from '@/app/store/mapStore';
+import mapApiUri from '../../api/mapApi';
+import useUserStore from '@/app/store/userStore';
 
 interface Coordinates {
   lat: number;
@@ -38,34 +38,42 @@ interface HomeAddress {
 }
 
 const App: React.FC = () => {
-
   const { userData }: any = useUserStore();
-  const user = userData;
-  const addresses = convertHomeAddress(user?.addresses) || '';
-  const homeAddress: HomeAddress[] = addresses || [];
 
+  // const addresses = convertHomeAddress(userData?.addresses) || '';
+  let homeAddress: HomeAddress[] = [];
 
   const [features, setFeatures] = useState<Feature[]>([]);
   const [api, setApi] = useState<string>(Jugendberufshilfe);
   const [info, setInfo] = useState<{ [key: string]: any }>({});
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [address, setAddress] = useState<string>(homeAddress[0]?.name ?? '');
+  const [address, setAddress] = useState<string>('');
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
-const apiKey = "AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc";
+  const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
 
-const getGeocode = async (address: string, apiKey: string) => {
-  const response = await fetch(mapApiUri(address, apiKey));
-  const data = await response.json();
-  if (data.status === "OK") {
-    const { lat, lng } = data.results[0].geometry.location;
-    return { lat, lng };
-  } else {
-    throw new Error("Geocoding failed");
-  }
-};
+  const getGeocode = async (address: string, apiKey: string) => {
+    console.log(address);
+
+    const response = await fetch(mapApiUri(address, apiKey));
+    const data = await response.json();
+    if (data.status === 'OK') {
+      const { lat, lng } = data.results[0].geometry.location;
+      return { lat, lng };
+    } else {
+      throw new Error('Geocoding failed');
+    }
+  };
 
   const { setHomeCoords, setData } = useDataStore();
+
+  useEffect(() => {
+    if (userData) {
+      const addresses = convertHomeAddress(userData?.addresses) || '';
+      setAddress(addresses[0]?.name);
+    }
+  }, [userData]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -74,13 +82,14 @@ const getGeocode = async (address: string, apiKey: string) => {
         setFeatures(data.features);
         setData(data.features);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
     fetchData();
-    handleGeocode(address);
-  }, [api, address]);
+    console.log('adreessssssssssssssssssssss', address);
 
+    if (address) handleGeocode(address);
+  }, [api, address]);
 
   const showInfoOnClick = (obj: { [key: string]: any }) => {
     setInfo(obj);
@@ -97,7 +106,7 @@ const getGeocode = async (address: string, apiKey: string) => {
       setCoordinates(coords);
       setHomeCoords(coords);
     } catch (error) {
-      console.error("Error fetching geocode:", error);
+      console.error('Error fetching geocode:', error);
     }
   };
 
@@ -110,7 +119,7 @@ const getGeocode = async (address: string, apiKey: string) => {
       <Sidebar />
       <APIProvider apiKey={apiKey}>
         <Map
-          style={{ width: "100vw", height: "100vh", borderRadius: 10 }}
+          style={{ width: '100vw', height: '100vh', borderRadius: 10 }}
           defaultCenter={{ lat: 50.827847, lng: 12.92137 }}
           defaultZoom={12}
           gestureHandling="greedy"
@@ -144,7 +153,6 @@ const getGeocode = async (address: string, apiKey: string) => {
                 Jugendberufshilfe
               </button>
             </div>
-
           </MapControl>
 
           <MapControl position={ControlPosition.BOTTOM_CENTER}>
@@ -171,9 +179,7 @@ const getGeocode = async (address: string, apiKey: string) => {
                 lat: feature.geometry.y,
                 lng: feature.geometry.x,
               }}
-              onClick={() =>
-                showInfoOnClick(feature.attributes)
-              }
+              onClick={() => showInfoOnClick(feature.attributes)}
             ></AdvancedMarker>
           ))}
           {coordinates && (
@@ -184,9 +190,9 @@ const getGeocode = async (address: string, apiKey: string) => {
               }}
             >
               <Pin
-                background={"#FBBC04"}
-                glyphColor={"#000"}
-                borderColor={"#000"}
+                background={'#FBBC04'}
+                glyphColor={'#000'}
+                borderColor={'#000'}
               />
             </AdvancedMarker>
           )}

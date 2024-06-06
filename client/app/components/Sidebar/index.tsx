@@ -1,6 +1,6 @@
-import React from "react";
-import Profile from "./Profile";
-import List from "./List";
+import React from 'react';
+import Profile from './Profile';
+import List from './List';
 
 const Sidebar = () => {
   return (

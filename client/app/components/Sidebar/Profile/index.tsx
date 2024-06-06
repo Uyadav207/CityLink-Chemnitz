@@ -1,20 +1,20 @@
 'use client';
 
 import React from 'react';
-import { useUserStore } from '@/app/store/userStore';
+import useUserStore from '@/app/store/userStore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import RandomAvatar from '../../RandomAvatar';
 
 const Profile: React.FC = () => {
-const { userData }: any = useUserStore();
-const user = userData;
+  const { userData }: any = useUserStore();
+  const user = userData;
   return (
     <div className="flex mb-5">
-      <span className="mt-2">
+      {/* <span className="mt-2">
         <RandomAvatar name={'John Doe'} />
-      </span>
+      </span> */}
       <div className="flex flex-col ml-3">
         <h1 className="text-lg font-bold">
           {user?.firstName} {user?.lastName}
