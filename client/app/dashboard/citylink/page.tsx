@@ -116,30 +116,31 @@ const App: React.FC = () => {
           <MapControl position={ControlPosition.TOP_CENTER}>
             <div className="flex p-2 justify-between space-x-4">
               <button
-                className="btn shadow-md"
+                className="flex-1 btn bg-white shadow-l"
                 onClick={() => handleApiTrigger(schule)}
               >
                 schule
               </button>
               <button
-                className="btn shadow-md"
+                className="flex-1 btn bg-white shadow-l"
                 onClick={() => handleApiTrigger(Schulsozialarbeit)}
               >
                 Schulsozialarbeit
               </button>
               <button
-                className="btn shadow-md"
+                className="flex-1 btn bg-white shadow-l"
                 onClick={() => handleApiTrigger(Kindertageseinrichtungen)}
               >
                 Kindertageseinrichtungen
               </button>
               <button
-                className="btn shadow-md"
+                className="flex-1 btn bg-white shadow-l"
                 onClick={() => handleApiTrigger(Jugendberufshilfe)}
               >
                 Jugendberufshilfe
               </button>
             </div>
+
           </MapControl>
 
           <MapControl position={ControlPosition.BOTTOM_CENTER}>

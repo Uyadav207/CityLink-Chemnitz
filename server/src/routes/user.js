@@ -138,52 +138,89 @@ router.post('/address/:userId', authenticateJWT, async (req, res) => {
   }
 });
 
-// Add a favourite category for a user
-router.post(
-  '/favourite-category/:userId',
-  authenticateJWT,
-  async (req, res) => {
-    const { userId } = req.params;
-    const { name } = req.body;
+// Add a favourite facility for a user
+router.post('/favourite/facility/:userId', authenticateJWT, async (req, res) => {
+  const { userId } = req.params;
+  const { category, objectId } = req.body;
 
-    try {
+  try {
+      // Check if the user exists
       const user = await prisma.user.findUnique({
-        where: { id: parseInt(userId) },
+          where: { id: parseInt(userId) },
       });
 
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+          return res.status(404).json({ error: 'User not found' });
       }
 
-      if (user.userType === 'REGULAR') {
-        const favouriteCategories = await prisma.favouriteCategory.findMany({
-          where: { userId: parseInt(userId) },
-        });
-        if (favouriteCategories.length >= 1) {
-          return res.status(400).json({
-            error: 'Regular users can only have one favourite category',
-          });
-        }
+      // Check if the user already has a favourite Facility
+      const existingFavouriteFacility = await prisma.favouriteFacility.findFirst({
+          where: { userId: parseInt(userId) }
+      });
+
+      if (existingFavouriteFacility) {
+          return res.status(400).json({ error: 'User already has a favourite facility' });
       }
 
-      const newFavouriteCategory = await prisma.favouriteCategory.create({
-        data: {
-          name,
-          userId: parseInt(userId),
-        },
+      // Add the new favourite facility
+      const newFavouriteFacility = await prisma.favouriteFacility.create({
+          data: {
+              category,
+              objectID: parseInt(objectId),
+              userId: parseInt(userId),
+          },
       });
 
       res.json({
-        message: 'Favourite category added successfully',
-        favouriteCategory: newFavouriteCategory,
+          message: 'Favourite facility added successfully',
+          favouriteFacility: newFavouriteFacility,
       });
-    } catch (error) {
+  } catch (error) {
       res.status(500).json({
-        error: 'Cannot add favourite category',
-        details: error.message,
+          error: 'Cannot add favourite facility',
+          details: error.message,
       });
-    }
   }
-);
+});
+
+// Delete a favourite facility for a user
+router.delete('/favourite/facility/:userId', authenticateJWT, async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+      // Check if the user exists
+      const user = await prisma.user.findUnique({
+          where: { id: parseInt(userId) },
+      });
+
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Check if the user has a favourite facility
+      const favouriteFacility = await prisma.favouriteFacility.findFirst({
+          where: { userId: parseInt(userId) }
+      });
+
+      if (!favouriteFacility) {
+          return res.status(404).json({ error: 'Favourite facility not found for this user' });
+      }
+
+      // Delete the favourite facility
+      await prisma.favouriteFacility.delete({
+          where: { id: favouriteFacility.id }
+      });
+
+      res.json({
+          message: 'Favourite facility deleted successfully'
+      });
+  } catch (error) {
+      res.status(500).json({
+          error: 'Cannot delete favourite facility',
+          details: error.message,
+      });
+  }
+});
+
 
 module.exports = router;
