@@ -8,7 +8,7 @@ const authenticateJWT = require('../middleware/authMiddleware');
 router.get('/', authenticateJWT, async (req, res) => {
   try {
     const users = await prisma.user.findMany({
-      include: { addresses: true, favouriteFacility: true },
+      include: { addresses: true, favouriteFacilities: true },
     });
     res.json({ message: 'Users retrieved successfully', users });
   } catch (error) {
@@ -26,7 +26,7 @@ router.put('/edit/:id', authenticateJWT, async (req, res) => {
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(id) },
       data: { username, password, firstName, lastName, phoneNo, email },
-      include: { addresses: true, favouriteCategories: true },
+      include: { addresses: true, favouriteFacilities: true } ,
     });
     res.json({ message: 'User updated successfully', user: updatedUser });
   } catch (error) {
@@ -57,7 +57,7 @@ router.get('/deleted', authenticateJWT, async (req, res) => {
   try {
     const users = await prisma.user.findMany({
       where: { isDeleted: true },
-      include: { addresses: true, favouriteCategories: true },
+      include: { addresses: true, favouriteFacilities: true } ,
     });
 
     if (!users) {
@@ -84,7 +84,7 @@ router.put('/change-type/:id', authenticateJWT, async (req, res) => {
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(id) },
       data: { userType },
-      include: { addresses: true, favouriteCategories: true },
+      include: { addresses: true, favouriteFacilities: true } ,
     });
     res.json({ message: 'User type updated successfully', user: updatedUser });
   } catch (error) {
