@@ -53,7 +53,8 @@ const Settings = () => {
       );
       toast.success(response.data.message);
       setEditClicked(true);
-      setUser({ ...userData, addresses: response.data.user.address });
+      setUser(response.data.updatedUser);
+      console.log(response.data.updatedUser);
     } catch (err: any) {
       console.log('erorr', err.response);
     } finally {

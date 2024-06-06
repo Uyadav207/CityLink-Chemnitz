@@ -130,7 +130,13 @@ router.post('/address/:userId', authenticateJWT, async (req, res) => {
       },
     });
 
-    res.json({ message: 'Address added successfully', address: newAddress });
+
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: { addresses: true, favouriteFacilities: true },
+    });
+
+    res.json({ message: 'Address added sucy', updatedUser });
   } catch (error) {
     res
       .status(500)

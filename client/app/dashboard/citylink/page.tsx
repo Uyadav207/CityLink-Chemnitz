@@ -49,6 +49,7 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [address, setAddress] = useState<string>('');
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
+  const [addressList, setAddressList] = useState<HomeAddress[]>([]);
 
   const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
 
@@ -70,6 +71,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (userData) {
       const addresses = convertHomeAddress(userData?.addresses) || '';
+      setAddressList(addresses);
       setAddress(addresses[0]?.name);
     }
   }, [userData]);
@@ -158,7 +160,7 @@ const App: React.FC = () => {
           <MapControl position={ControlPosition.BOTTOM_CENTER}>
             <div className="flex p-2 justify-between space-x-4">
               <AddressDropDown>
-                {homeAddress.map((item) => (
+                {addressList.map((item) => (
                   <li key={item.id} className="menu-title">
                     <button
                       onClick={() => handleClickGeolocation(item.name)}
