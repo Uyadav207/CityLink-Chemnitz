@@ -19,7 +19,7 @@ model User {
   isDeleted         Boolean              @default(false)
   createdAt         DateTime             @default(now())
   addresses         Address[]       
-  favouriteCategories FavouriteCategory[]
+  favouriteFacilities FavouriteFacility[]
 }
 
 model Address {
@@ -33,11 +33,12 @@ model Address {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model FavouriteCategory {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
+model FavouriteFacility{
+  id       Int    @id @default(autoincrement())
+  objectID Int
+  category CategoryType
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
 }
 
 enum UserType {
@@ -142,3 +143,11 @@ model Schulsozialarbeit {
 
   @@unique([Schulsozialarbeit_ID], map: "Schulsozialarbeit_ID")
 }
+
+enum CategoryType {
+  SCHULE
+  JUGENDBERUFSHILFE
+  KINDERTAGESEINRICHTUNGEN
+  SCHULSOZIALARBEIT 
+}
+

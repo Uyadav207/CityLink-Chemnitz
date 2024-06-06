@@ -7,10 +7,9 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import RandomAvatar from '../../RandomAvatar';
 
-const { userData }: any = useUserStore;
-const user = userData;
-
 const Profile: React.FC = () => {
+const { userData }: any = useUserStore();
+const user = userData;
   return (
     <div className="flex mb-5">
       <span className="mt-2">

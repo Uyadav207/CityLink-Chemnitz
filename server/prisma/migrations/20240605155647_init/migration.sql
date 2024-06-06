@@ -33,7 +33,8 @@ CREATE TABLE "Address" (
 -- CreateTable
 CREATE TABLE "FavouriteCategory" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
+    "objectID" INTEGER[],
+    "category" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "FavouriteCategory_pkey" PRIMARY KEY ("id")
