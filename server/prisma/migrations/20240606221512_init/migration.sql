@@ -1,3 +1,48 @@
+-- CreateEnum
+CREATE TYPE "UserType" AS ENUM ('REGULAR', 'SUPER');
+
+-- CreateEnum
+CREATE TYPE "CategoryType" AS ENUM ('SCHULE', 'JUGENDBERUFSHILFE', 'KINDERTAGESEINRICHTUNGEN', 'SCHULSOZIALARBEIT');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "phoneNo" TEXT NOT NULL,
+    "userType" "UserType" NOT NULL DEFAULT 'REGULAR',
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Address" (
+    "id" SERIAL NOT NULL,
+    "street" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "state" TEXT NOT NULL,
+    "zipCode" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "FavouriteFacility" (
+    "id" SERIAL NOT NULL,
+    "objectID" INTEGER NOT NULL,
+    "category" "CategoryType" NOT NULL,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "FavouriteFacility_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateTable
 CREATE TABLE "Jugendberufshilfe" (
     "OBJECTID" SERIAL NOT NULL,
@@ -44,9 +89,9 @@ CREATE TABLE "Schule" (
     "SNUMMER" INTEGER NOT NULL,
     "NUMMER" INTEGER NOT NULL,
     "GlobalID" TEXT NOT NULL,
-    "CreationDate" BIGINT NOT NULL,
+    "CreationDate" INTEGER NOT NULL,
     "Creator" TEXT NOT NULL,
-    "EditDate" BIGINT NOT NULL,
+    "EditDate" INTEGER NOT NULL,
     "Editor" TEXT NOT NULL,
     "x" DOUBLE PRECISION NOT NULL,
     "y" DOUBLE PRECISION NOT NULL,
@@ -101,6 +146,15 @@ CREATE TABLE "Schulsozialarbeit" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_phoneNo_key" ON "User"("phoneNo");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Jugendberufshilfe_Jugendberufshilfe_ID_key" ON "Jugendberufshilfe"("Jugendberufshilfe_ID");
 
 -- CreateIndex
@@ -123,3 +177,9 @@ CREATE UNIQUE INDEX "Schulsozialarbeit_Schulsozialarbeit_ID_key" ON "Schulsozial
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Schulsozialarbeit_ID" ON "Schulsozialarbeit"("Schulsozialarbeit_ID");
+
+-- AddForeignKey
+ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FavouriteFacility" ADD CONSTRAINT "FavouriteFacility_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

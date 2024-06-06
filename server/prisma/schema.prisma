@@ -67,7 +67,7 @@ model Jugendberufshilfe {
 
 model Schule {
   OBJECTID             Int      @id @default(autoincrement())
-  Schule_ID                   Int      @unique
+  Schule_ID            Int      @unique
   TYP                  Int
   ART                  String
   STANDORTTYP          String?
@@ -90,9 +90,7 @@ model Schule {
   SNUMMER              Int
   NUMMER               Int
   GlobalID             String
-  CreationDate         BigInt
   Creator              String
-  EditDate             BigInt
   Editor               String
   x                    Float
   y                    Float
