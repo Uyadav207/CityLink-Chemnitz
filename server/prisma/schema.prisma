@@ -44,3 +44,101 @@ enum UserType {
   REGULAR
   SUPER
 }
+
+model Jugendberufshilfe {
+  OBJECTID         Int      @id @default(autoincrement())
+  Jugendberufshilfe_ID      Int      @unique
+  TRAEGER          String
+  LEISTUNGEN       String
+  BEZEICHNUNG      String?
+  KURZBEZEICHNUNG  String?
+  STRASSE          String
+  PLZ              String
+  ORT              String 
+  TELEFON          String
+  EMAIL            String?
+  FAX              String?
+  x                Float
+  y                Float
+
+  @@unique([Jugendberufshilfe_ID], map: "Jugendberufshilfe_ID")
+}
+
+model Schule {
+  OBJECTID             Int      @id @default(autoincrement())
+  Schule_ID                   Int      @unique
+  TYP                  Int
+  ART                  String
+  STANDORTTYP          String?
+  BEZEICHNUNG          String
+  BEZEICHNUNGZUSATZ    String?
+  KURZBEZEICHNUNG      String
+  STRASSE              String
+  PLZ                  String
+  ORT                  String
+  TELEFON              String
+  FAX                  String?
+  EMAIL                String?
+  PROFILE              String?
+  SPRACHEN             String?
+  WWW                  String?
+  TRAEGER              String
+  TRAEGERTYP           Int
+  BEZUGNR              String?
+  GEBIETSARTNUMMER     Int
+  SNUMMER              Int
+  NUMMER               Int
+  GlobalID             String
+  CreationDate         BigInt
+  Creator              String
+  EditDate             BigInt
+  Editor               String
+  x                    Float
+  y                    Float
+
+  @@unique([Schule_ID], map: "Schule_ID")
+}
+
+model Kindertageseinrichtungen {
+  OBJECTID             Int      @id @default(autoincrement())
+  Kindertageseinrichtungen_ID                   Int      @unique
+  TRAEGER              String
+  BEZEICHNUNG          String
+  KURZBEZEICHNUNG      String
+  STRASSE              String
+  STRSCHL              String
+  HAUSBEZ              String
+  PLZ                  String
+  ORT                  String
+  HORT                 Int
+  KITA                 Int
+  URL                  String?
+  TELEFON              String
+  FAX                  String?
+  EMAIL                String?
+  BARRIEREFREI         Int
+  INTEGRATIV           Int
+  x                    Float
+  y                    Float
+
+  @@unique([Kindertageseinrichtungen_ID], map: "Kindertageseinrichtungen_ID")
+}
+
+model Schulsozialarbeit {
+  OBJECTID       Int      @id @default(autoincrement())
+  Schulsozialarbeit_ID             Int      @unique
+  TRAEGER        String
+  LEISTUNGEN     String?
+  BEZEICHNUNG    String?
+  KURZBEZEICHNUNG String?
+  STRASSE        String
+  PLZ            String
+  ORT            String
+  TELEFON        String?
+  EMAIL          String?
+  FAX            String?
+  x              Float
+  y              Float
+
+  @@unique([Schulsozialarbeit_ID], map: "Schulsozialarbeit_ID")
+}
