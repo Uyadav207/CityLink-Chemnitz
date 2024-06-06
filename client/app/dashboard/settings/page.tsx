@@ -308,11 +308,12 @@ const Settings = () => {
                 <>
                   {userData &&
                     userData?.addresses?.map(
-                      ({ country, state, city, street, zipCode, id }) => (
+                      ({ country, state, city, street, zipCode, id }: any) => (
                         <p key={id}>
                           Country: {country} <br />
                           State: {state}
                           <br />
+                          Street: {street} <br />
                           City: {city} <br />
                           State: {state} <br />
                           Postal Code: {zipCode} <br />
