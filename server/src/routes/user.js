@@ -8,7 +8,7 @@ const authenticateJWT = require('../middleware/authMiddleware');
 router.get('/', authenticateJWT, async (req, res) => {
   try {
     const users = await prisma.user.findMany({
-      include: { addresses: true, favouriteCategories: true },
+      include: { addresses: true, favouriteFacility: true },
     });
     res.json({ message: 'Users retrieved successfully', users });
   } catch (error) {

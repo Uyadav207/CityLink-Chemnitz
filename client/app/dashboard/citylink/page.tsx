@@ -20,6 +20,7 @@ import AddressDropDown from "../../components/Sidebar/AddressDropDown";
 import convertHomeAddress from "./ConvertAddress";
 import useDataStore from "@/app/store/mapStore";
 import mapApiUri from "../../api/mapApi";
+import useUserStore from "@/app/store/userStore";
 
 interface Coordinates {
   lat: number;
@@ -36,10 +37,20 @@ interface HomeAddress {
   name: string;
 }
 
-const userData: any = localStorage.getItem("user");
-const user = JSON.parse(userData);
-const addresses = convertHomeAddress(user.addresses);
-const homeAddress: HomeAddress[] = addresses;
+const App: React.FC = () => {
+
+  const { userData }: any = useUserStore();
+  const user = userData;
+  const addresses = convertHomeAddress(user?.addresses) || '';
+  const homeAddress: HomeAddress[] = addresses || [];
+
+
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [api, setApi] = useState<string>(Jugendberufshilfe);
+  const [info, setInfo] = useState<{ [key: string]: any }>({});
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [address, setAddress] = useState<string>(homeAddress[0]?.name ?? '');
+  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
 const apiKey = "AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc";
 
@@ -53,13 +64,6 @@ const getGeocode = async (address: string, apiKey: string) => {
     throw new Error("Geocoding failed");
   }
 };
-const App: React.FC = () => {
-  const [features, setFeatures] = useState<Feature[]>([]);
-  const [api, setApi] = useState<string>(Jugendberufshilfe);
-  const [info, setInfo] = useState<{ [key: string]: any }>({});
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [address, setAddress] = useState<string>(homeAddress[0]?.name ?? '');
-  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
   const { setHomeCoords, setData } = useDataStore();
   useEffect(() => {
