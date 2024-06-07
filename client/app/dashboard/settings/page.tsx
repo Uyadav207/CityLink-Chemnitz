@@ -29,8 +29,6 @@ const Settings = () => {
   const [loader, setLoader] = useState(false);
 
   const handleEdit = async (values: any) => {
-    console.log('qqqqqqqqqqqqqqq', values);
-
     try {
       setLoader(true);
       const response = await settingsApi.editUserDetails(userData.id, values);
@@ -306,22 +304,39 @@ const Settings = () => {
                   }}
                 </Formik>
               ) : (
-                <>
+                <div className="grid grid-cols-3 gap-8 w-full">
                   {userData &&
-                    userData?.addresses?.map(
-                      ({ country, state, city, street, zipCode, id }: any) => (
-                        <p key={id}>
-                          Country: {country} <br />
-                          State: {state}
-                          <br />
-                          Street: {street} <br />
-                          City: {city} <br />
-                          State: {state} <br />
-                          Postal Code: {zipCode} <br />
-                        </p>
+                    userData.addresses.map(
+                      (
+                        { country, state, city, street, zipCode, id },
+                        index
+                      ) => (
+                        <div
+                          key={id}
+                          className="border w-full p-2  relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl "
+                        >
+                          <h5 className="text-center block mb-2 font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
+                            Address {index + 1}
+                          </h5>
+                          {index === 0 ? (
+                            <p className="text-center">(Primary Address)</p>
+                          ) : (
+                            <br />
+                          )}
+
+                          <div className="p-6">
+                            <p className="block font-sans text-base antialiased font-light leading-relaxed text-inherit">
+                              <strong>Country:</strong> {country} <br />
+                              <strong>State:</strong> {state} <br />
+                              <strong>City:</strong> {city} <br />
+                              <strong>Street:</strong> {street} <br />
+                              <strong>Postal Code:</strong> {zipCode}
+                            </p>
+                          </div>
+                        </div>
                       )
                     )}
-                </>
+                </div>
               )}
             </div>
           </div>

@@ -5,7 +5,9 @@ const useUserStore = create(
   persist(
     (set) => ({
       userData: null,
+      currentCategory: 'SCHULE',
       setUser: (value) => set(() => ({ userData: value })),
+      setCurrentCategory: (value) => set(() => ({ currentCategory: value })),
       logout: () => set({ userData: null }),
     }),
     {
