@@ -135,7 +135,7 @@ const List: React.FC = () => {
   console.log(filteredData);
 
   return (
-    <div className="vh-100 "
+    <div className="vh-100 ">
       <Search value={searchTerm} onChange={handleSearch} />
       {noResults ? (
         <div className="text-center py-4 text-gray-600">No results found.</div>
