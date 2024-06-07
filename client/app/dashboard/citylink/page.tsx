@@ -173,7 +173,7 @@ const App: React.FC = () => {
                 className="flex-1 btn bg-white shadow-l"
                 onClick={() => {
                   handleApiTrigger(Jugendberufshilfe);
-                  setCurrentCategory('JUGENDBERUFHILFE');
+                  setCurrentCategory('JUGENDBERUFSHILFE');
                 }}
               >
                 Jugendberufshilfe

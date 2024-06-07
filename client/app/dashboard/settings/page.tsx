@@ -63,12 +63,16 @@ const Settings = () => {
   const handleUserTypeChange = async () => {
     try {
       setLoader(true);
+      console.log(userData.userType);
+
       const payload = {
-        userType: toggle ? 'REGULAR' : 'SUPER',
+        userType: userData.userType === 'REGULAR' ? 'SUPER' : 'REGULAR',
       };
 
       const response = await settingsApi.switchUserMode(userData.id, payload);
       toast.success(response.data.message);
+      console.log('response', response.data);
+
       setUser(response.data.user);
       setEditClicked(true);
     } catch (err: any) {
@@ -77,6 +81,8 @@ const Settings = () => {
       setLoader(false);
     }
   };
+
+  console.log(userData);
 
   return (
     <div className="w-full p-6 mx-auto ">
