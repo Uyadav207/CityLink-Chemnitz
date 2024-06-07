@@ -84,12 +84,12 @@ const List: React.FC = () => {
   console.log(filteredData);
 
   return (
-    <div className="vh-100">
+    <div className="h-full">
       <Search value={searchTerm} onChange={handleSearch} />
       {noResults ? (
         <div className="text-center py-4 text-gray-600">No results found.</div>
       ) : (
-        <div className="overflow-auto">
+        <div className="max-h-80 overflow-hidden hover:overflow-y-auto">
           <ul className="bordered-list">
             {filteredData.map((data: any, index: number) => (
               <li

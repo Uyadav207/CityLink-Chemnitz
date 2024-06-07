@@ -9,7 +9,7 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ value, onChange }) => {
   return (
-    <span className="relative flex items-center mb-5 rounded-xl border border-black-400 p-2">
+    <span className="relative flex items-center mb-5 rounded-xl border border-black-400 p-1">
       <input
         type="text "
         className="bg-transparent flex-grow p-2 focus:outline-none"
