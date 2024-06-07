@@ -172,7 +172,7 @@ const List: React.FC = () => {
                   //     data.attributes.OBJECTID
                   // }
                   className={`focus:outline-none`}
-                  onClick={() => toggleFavorite(data.attributes.ID)}
+                  onClick={() => toggleFavorite(data.attributes.OBJECTID)}
                 >
                   {userData.favouriteFacilities[0]?.category ===
                     currentCategory &&

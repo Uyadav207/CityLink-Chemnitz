@@ -9,8 +9,6 @@ const Sidebar = () => {
       <div className="leftside-bar bg-white-200 px-2 py-6 ">
         <Profile />
         <List />
-        <Profile />
-        <List />
       </div>
       {/* <Logout /> */}
     </>
