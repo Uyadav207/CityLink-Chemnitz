@@ -38,13 +38,13 @@ interface HomeAddress {
 }
 
 const App: React.FC = () => {
-  const { userData }: any = useUserStore();
+  const { userData, currentCategory, setCurrentCategory } = useUserStore();
 
   // const addresses = convertHomeAddress(userData?.addresses) || '';
   let homeAddress: HomeAddress[] = [];
 
   const [features, setFeatures] = useState<Feature[]>([]);
-  const [api, setApi] = useState<string>(Jugendberufshilfe);
+  const [api, setApi] = useState<string>('');
   const [info, setInfo] = useState<{ [key: string]: any }>({});
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [address, setAddress] = useState<string>('');
@@ -54,15 +54,17 @@ const App: React.FC = () => {
   const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
 
   const getGeocode = async (address: string, apiKey: string) => {
-    console.log(address);
-
-    const response = await fetch(mapApiUri(address, apiKey));
-    const data = await response.json();
-    if (data.status === 'OK') {
-      const { lat, lng } = data.results[0].geometry.location;
-      return { lat, lng };
-    } else {
-      throw new Error('Geocoding failed');
+    try {
+      const response = await fetch(mapApiUri(address, apiKey));
+      const data = await response.json();
+      if (data.status === 'OK') {
+        const { lat, lng } = data.results[0].geometry.location;
+        return { lat, lng };
+      } else {
+        throw new Error('Geocoding failed');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -73,23 +75,33 @@ const App: React.FC = () => {
       const addresses = convertHomeAddress(userData?.addresses) || '';
       setAddressList(addresses);
       setAddress(addresses[0]?.name);
+      if (currentCategory === 'SCHULE') {
+        setApi(schule);
+      } else if (currentCategory === 'SCHULSOZIALARBEIT') {
+        setApi(Schulsozialarbeit);
+      } else if (currentCategory === 'KINDERTAGESEINRICHTUNGEN') {
+        setApi(currentCategory);
+      } else {
+        setApi(currentCategory);
+      }
     }
   }, [userData]);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(api);
-        const data = await response.json();
-        setFeatures(data.features);
-        setData(data.features);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      if (api) {
+        try {
+          const response = await fetch(api);
+          const data = await response.json();
+
+          setFeatures(data.features);
+          setData(data.features);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
       }
     };
     fetchData();
-    console.log('adreessssssssssssssssssssss', address);
-
     if (address) handleGeocode(address);
   }, [api, address]);
 
@@ -132,25 +144,37 @@ const App: React.FC = () => {
             <div className="flex p-2 justify-between space-x-4">
               <button
                 className="flex-1 btn bg-white shadow-l"
-                onClick={() => handleApiTrigger(schule)}
+                onClick={() => {
+                  handleApiTrigger(schule);
+                  setCurrentCategory('SCHULE');
+                }}
               >
                 schule
               </button>
               <button
                 className="flex-1 btn bg-white shadow-l"
-                onClick={() => handleApiTrigger(Schulsozialarbeit)}
+                onClick={() => {
+                  handleApiTrigger(Schulsozialarbeit);
+                  setCurrentCategory('SCHULSOZIALARBEIT');
+                }}
               >
                 Schulsozialarbeit
               </button>
               <button
                 className="flex-1 btn bg-white shadow-l"
-                onClick={() => handleApiTrigger(Kindertageseinrichtungen)}
+                onClick={() => {
+                  handleApiTrigger(Kindertageseinrichtungen);
+                  setCurrentCategory('KINDERTAGESEINRICHTUNGEN');
+                }}
               >
                 Kindertageseinrichtungen
               </button>
               <button
                 className="flex-1 btn bg-white shadow-l"
-                onClick={() => handleApiTrigger(Jugendberufshilfe)}
+                onClick={() => {
+                  handleApiTrigger(Jugendberufshilfe);
+                  setCurrentCategory('JUGENDBERUFHILFE');
+                }}
               >
                 Jugendberufshilfe
               </button>
@@ -160,16 +184,17 @@ const App: React.FC = () => {
           <MapControl position={ControlPosition.BOTTOM_CENTER}>
             <div className="flex p-2 justify-between space-x-4">
               <AddressDropDown>
-                {addressList.map((item) => (
-                  <li key={item.id} className="menu-title">
-                    <button
-                      onClick={() => handleClickGeolocation(item.name)}
-                      className="flex items-center space-x-2"
-                    >
-                      <span>{item.name}</span>
-                    </button>
-                  </li>
-                ))}
+                {addressList &&
+                  addressList.map((item) => (
+                    <li key={item.id} className="menu-title">
+                      <button
+                        onClick={() => handleClickGeolocation(item.name)}
+                        className="flex items-center space-x-2"
+                      >
+                        <span>{item.name}</span>
+                      </button>
+                    </li>
+                  ))}
               </AddressDropDown>
             </div>
           </MapControl>

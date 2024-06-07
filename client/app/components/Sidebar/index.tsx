@@ -4,7 +4,7 @@ import List from './List';
 
 const Sidebar = () => {
   return (
-    <div className="top-0 left-0 w-80 bg-white-200 p-8">
+    <div className="leftside-bar bg-white-200 px-2 py-6 ">
       <Profile />
       <List />
     </div>
