@@ -12,11 +12,9 @@ const Profile: React.FC = () => {
   const user = userData;
   return (
     <div className="flex mb-5">
-      {/* <span className="mt-2">
-        <RandomAvatar name={'John Doe'} />
-      </span> */}
+     <RandomAvatar />
       <div className="flex flex-col ml-3">
-        <h1 className="text-lg font-bold">
+        <h1 className="text-l font-bold">
           {user?.firstName} {user?.lastName}
         </h1>
         <p className="text-sm text-gray-500">@{user?.username}</p>

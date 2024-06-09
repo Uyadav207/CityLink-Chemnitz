@@ -114,7 +114,7 @@ router.post('/address/:userId', authenticateJWT, async (req, res) => {
       });
       if (addresses.length >= 1) {
         return res
-          .status(409)
+          .status(401)
           .json({ error: 'Regular users can only have one address' });
       }
     }
@@ -194,7 +194,7 @@ router.post('/favourite/facility/:userId', authenticateJWT, async (req, res) => 
       });
 
       if (favouriteFacilities.length >= 1) {
-        return res.status(403).json({ message: 'Regular user can only have one favourite facility. Please delete the existing favourite before adding a new one.' });
+        return res.status(401).json({ error: 'Regular user can have one favourite' });
       }
     }
 

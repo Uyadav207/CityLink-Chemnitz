@@ -15,7 +15,7 @@ router.post('/auth', async (req, res) => {
         });
 
         if (existingUsername) {
-            return res.status(409).json({ message: 'Username already taken' });
+            return res.status(401).json({ error: 'Username already taken' });
         }
 
         // Check if the email already exists
@@ -24,7 +24,7 @@ router.post('/auth', async (req, res) => {
         });
 
         if (existingEmail) {
-            return res.status(409).json({ message: 'Email already taken' });
+            return res.status(401).json({ error: 'Email already taken' });
         }
 
         // Check if the phone number already exists
@@ -33,7 +33,7 @@ router.post('/auth', async (req, res) => {
         });
 
         if (existingPhoneNo) {
-            return res.status(409).json({ message: 'Phone number already taken' });
+            return res.status(401).json({ error: 'Phone number already taken' });
         }
 
         // Hash the password
