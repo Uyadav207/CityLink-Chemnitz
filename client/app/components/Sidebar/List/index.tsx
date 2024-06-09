@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import Heart from "react-animated-heart";
 import useDataStore from '@/app/store/mapStore';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -7,9 +8,6 @@ import Search from '../Search';
 import calculateDistance from './Distance';
 
 import { favoriteFacilityApi } from '@/app/api/favorite';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faHeartCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import useUserStore from '@/app/store/userStore';
 import toast from 'react-hot-toast';
 
@@ -19,9 +17,8 @@ const List: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [noResults, setNoResults] = useState(false);
-  const [favorited, setFavorites] = useState([]);
+  const [isClick, setClick] = useState(false);
   const { userData, currentCategory, setUser } = useUserStore();
-  console.log(userData);
 
   useEffect(() => {
     if (dataApi) {
@@ -89,50 +86,34 @@ const List: React.FC = () => {
     );
   }
 
-  // console.log(filteredData);
-  console.log('curentttt casdmnaskdm', currentCategory);
 
   const toggleFavorite = async (id: any) => {
-    console.log(userData.favouriteFacilities);
-
-    if (
-      userData.favouriteFacilities[0]?.category === currentCategory &&
-      userData.favouriteFacilities[0]?.objectID === id
-    ) {
+    const payload = { category: currentCategory, objectId: id};
+    const isFavorite = userData.favouriteFacilities.find((facility: any) => (id === facility?.objectID && currentCategory === facility?.category));
+    if (!isFavorite) {
       try {
-        const response = await favoriteFacilityApi.removeFavoriteFacility(
-          userData.id
+        const response = await favoriteFacilityApi.addDeleteFavoriteFacility(
+          userData.id,
+          payload
         );
-        console.log(response.data);
-        toast.success('Favorite facility removed Successfully');
-        setUser({ ...userData, favouriteFacilities: [] });
-
-        console.log(response);
+        toast.success('Favorite facility Added Successfully');
+        setUser(response.data.updatedUser);
       } catch (error) {
         console.log(error);
       }
     } else {
-      const payload = {
-        category: currentCategory,
-        objectId: id,
-      };
       try {
-        const response = await favoriteFacilityApi.addFavoriteFacility(
+        const response = await favoriteFacilityApi.addDeleteFavoriteFacility(
           userData.id,
           payload
         );
-        toast.success('Favorite facility added Successfully');
-        setUser({
-          ...userData,
-          favouriteFacilities: [response.data.favouriteFacility],
-        });
+        toast.success('Favorite facility Removed Successfully');
+        setUser(response.data.updatedUser);
       } catch (error) {
         console.log(error);
       }
     }
   };
-
-  console.log(filteredData);
 
   return (
     <div className="vh-100 ">
@@ -145,7 +126,7 @@ const List: React.FC = () => {
             {filteredData.map((data: any, index: number) => (
               <li
                 key={index}
-                className="mb-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer flex border-b items-center justify-between"
+                className="mb-2 hover:bg-gray-100 pl-2 rounded-md cursor-pointer flex border-b items-center max-w-80"
               >
                 <div className="flex flex-col w-4/5">
                   <h1 className="text-sm font-bold truncate">
@@ -166,38 +147,19 @@ const List: React.FC = () => {
                   </p>
                 </div>
                 <button
-                  // disabled={
-                  //   userData.favouriteFacilities.length !== 0 &&
-                  //   userData.favouriteFacilities[0]?.objectID !==
-                  //     data.attributes.OBJECTID
-                  // }
-                  className={`focus:outline-none`}
+                  className={'focus:outline-none w-14 h-14 flex items-center justify-self-auto rounded-full'}
                   onClick={() => toggleFavorite(data.attributes.OBJECTID)}
                 >
-                  {userData.favouriteFacilities[0]?.category ===
-                    currentCategory &&
-                  userData.favouriteFacilities[0]?.objectID ===
-                    data.attributes.OBJECTID ? (
-                    <FontAwesomeIcon
-                      // icon={favorites[item.id] ? solidHeart : regularHeart}
-                      icon={faHeart}
-                      color="red"
-                      // className="text-red-500"
-                    />
+                  {(userData.favouriteFacilities.find((facility: any) =>(data.attributes.OBJECTID === facility?.objectID && currentCategory === facility?.category))) ? (
+                    <Heart isClick={true} onClick={() => setClick(true)} />
                   ) : (
-                    <FontAwesomeIcon
-                      // icon={favorites[item.id] ? solidHeart : regularHeart}
-                      icon={faHeart}
-                      color="grey"
-                      // className="text-red-500"
-                    />
+                    <Heart isClick={false} onClick={() => setClick(false)} />
                   )}
                 </button>
-              </li>
-            ))}
+              </li> ))};
           </ul>
         </div>
-      )}
+      )};
     </div>
   );
 };
