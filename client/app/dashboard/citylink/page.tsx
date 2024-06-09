@@ -116,7 +116,7 @@ const App: React.FC = () => {
 
   const handleGeocode = async (address: string) => {
     try {
-      const coords: Coordinates = await getGeocode(address, apiKey);
+      const coords: any = await getGeocode(address, apiKey);
       setCoordinates(coords);
       setHomeCoords(coords);
     } catch (error) {

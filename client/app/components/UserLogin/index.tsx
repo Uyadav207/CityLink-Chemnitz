@@ -30,7 +30,7 @@ const UserLogin = () => {
       storeUserTokenInLocalStorage(response.data.token);
       setUser(response.data.user);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      router.push('/dashboard/settings');
+      router.push('/dashboard/citylink');
     } catch (err: any) {
       console.log('erorr', err.response);
     } finally {

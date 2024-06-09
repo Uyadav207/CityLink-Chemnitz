@@ -1,12 +1,15 @@
-import React, { useState } from "react";
-import { faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useUserStore from "@/app/store/userStore";
-import Modal from "../../Modal"; // Adjust the path as necessary
+"use client"
+// src/components/Logout.tsx
+import React from 'react';
+import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useUserStore from '@/app/store/userStore';
+import useModalStore from '@/app/store/modalStore';
+import Modal from '../../Modal';
 
 const Logout: React.FC = () => {
   const { logout } = useUserStore();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { setIsOpen, setModalData } = useModalStore();
 
   const handleLogout = () => {
     logout();
@@ -17,33 +20,23 @@ const Logout: React.FC = () => {
   };
 
   const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const confirmLogout = () => {
-    handleLogout();
-    closeModal();
+    setModalData(
+      'Confirm Logout',
+      'Are you sure you want to logout?',
+      handleLogout
+    );
+    setIsOpen(true);
   };
 
   return (
     <div className="absolute bottom-0 logout">
       <p onClick={openModal} className="btn flex text-lg text">
-        Logout {""}
+        Logout {''}
         <span className="ml-3">
           <FontAwesomeIcon icon={faArrowAltCircleRight} />
         </span>
       </p>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={confirmLogout}
-        title="Confirm Logout"
-        message="Are you sure you want to logout?"
-      />
+      <Modal />
     </div>
   );
 };
