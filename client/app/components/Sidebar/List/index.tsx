@@ -1,5 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import useDataStore from '@/app/store/mapStore';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -14,14 +17,24 @@ import useUserStore from '@/app/store/userStore';
 import toast from 'react-hot-toast';
 
 const List: React.FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const { homeCoords, dataApi } = useDataStore();
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [noResults, setNoResults] = useState(false);
   const [favorited, setFavorites] = useState([]);
-  const { userData, currentCategory, setUser } = useUserStore();
+  const { userData, currentCategory, setUser, setSelectedFacility } =
+    useUserStore();
   console.log(userData);
+
+  const updateQueryParam = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.set(key, value);
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
+  };
 
   useEffect(() => {
     if (dataApi) {
@@ -135,17 +148,21 @@ const List: React.FC = () => {
   console.log(filteredData);
 
   return (
-    <div className="vh-100 ">
+    <div>
       <Search value={searchTerm} onChange={handleSearch} />
       {noResults ? (
         <div className="text-center py-4 text-gray-600">No results found.</div>
       ) : (
-        <div className="overflow-auto ">
+        <div className="h-[70vh] overflow-y-auto " id="scrollableDiv">
           <ul className="bordered-list">
             {filteredData.map((data: any, index: number) => (
               <li
                 key={index}
                 className="mb-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer flex border-b items-center justify-between"
+                onClick={() => {
+                  // updateQueryParam('id', data.attributes.OBJECTID);
+                  setSelectedFacility(data);
+                }}
               >
                 <div className="flex flex-col w-4/5">
                   <h1 className="text-sm font-bold truncate">
@@ -166,11 +183,6 @@ const List: React.FC = () => {
                   </p>
                 </div>
                 <button
-                  // disabled={
-                  //   userData.favouriteFacilities.length !== 0 &&
-                  //   userData.favouriteFacilities[0]?.objectID !==
-                  //     data.attributes.OBJECTID
-                  // }
                   className={`focus:outline-none`}
                   onClick={() => toggleFavorite(data.attributes.OBJECTID)}
                 >
@@ -178,19 +190,9 @@ const List: React.FC = () => {
                     currentCategory &&
                   userData.favouriteFacilities[0]?.objectID ===
                     data.attributes.OBJECTID ? (
-                    <FontAwesomeIcon
-                      // icon={favorites[item.id] ? solidHeart : regularHeart}
-                      icon={faHeart}
-                      color="red"
-                      // className="text-red-500"
-                    />
+                    <FontAwesomeIcon icon={faHeart} color="red" />
                   ) : (
-                    <FontAwesomeIcon
-                      // icon={favorites[item.id] ? solidHeart : regularHeart}
-                      icon={faHeart}
-                      color="grey"
-                      // className="text-red-500"
-                    />
+                    <FontAwesomeIcon icon={faHeart} color="grey" />
                   )}
                 </button>
               </li>

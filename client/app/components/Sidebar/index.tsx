@@ -6,7 +6,7 @@ import Logout from './Logout';
 const Sidebar = () => {
   return (
     <>
-      <div className="leftside-bar bg-white-200 px-2 py-6 ">
+      <div className=" leftside-bar bg-white-200 px-2 py-6 ">
         <Profile />
         <List />
       </div>
