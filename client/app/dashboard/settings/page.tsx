@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useUserStore from '../../store/userStore';
+import useModalStore from '@/app/store/modalStore';
 import { Form, Formik } from 'formik';
 
 import {
@@ -20,15 +21,16 @@ import {
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { settingsApi } from '@/app/api/settings';
-import { Loader } from '@/app/components/Loader';
+import { Loader } from '@/app/components/Loader'; // Adjust the path as necessary
 
 const Settings = () => {
-  const router =  useRouter();
+  const router = useRouter();
   const [toggle, setToggle] = useState<boolean>(false);
   const [editClicked, setEditClicked] = useState(true);
   const { userData, setUser } = useUserStore();
   const [pageLoader, setPageLoader] = useState(false);
   const [loader, setLoader] = useState(false);
+  const { setIsOpen, setModalData } = useModalStore();
 
   const handleEdit = async (values: any) => {
     try {
@@ -47,10 +49,7 @@ const Settings = () => {
   const handleAddContact = async (values: any) => {
     try {
       setLoader(true);
-      const response = await settingsApi.editContactDetails(
-        userData.id,
-        values
-      );
+      const response = await settingsApi.editContactDetails(userData.id, values);
       toast.success(response.data.message);
       setEditClicked(true);
       setUser(response.data.updatedUser);
@@ -84,10 +83,10 @@ const Settings = () => {
     }
   };
 
-  const handleDeleteAccount = async (id: number) => {
+  const confirmDeleteAccount = async () => {
     try {
       setPageLoader(true);
-      const response = await settingsApi.deleteUser(id);
+      const response = await settingsApi.deleteUser(userData.id);
       toast.success(response.data.message);
       router.refresh();
       router.push('/signUp');
@@ -96,7 +95,16 @@ const Settings = () => {
     } finally {
       setPageLoader(false);
     }
-  }
+  };
+
+  const handleDeleteAccount = () => {
+    setModalData(
+      'Confirm Delete Account',
+      'Are you sure you want to delete your account? This action cannot be undone.',
+      confirmDeleteAccount
+    );
+    setIsOpen(true);
+  };
 
   return (
     <div className="w-full p-6 mx-auto ">
@@ -107,9 +115,9 @@ const Settings = () => {
             <div className="border-black/12.5 rounded-t-2xl border-b-0 border-solid p-6 pb-0">
               <div className="flex items-center justify-between">
                 <p className="mb-0 text-2xl font-bold">Settings</p>
-                <button className="btn btn-error text-white btn-outline" onClick={() => handleDeleteAccount(userData.id)}>
-                    Delete Account
-                  </button>
+                <button className="btn btn-error text-white btn-outline" onClick={handleDeleteAccount}>
+                  Delete Account
+                </button>
               </div>
             </div>
 
@@ -123,16 +131,16 @@ const Settings = () => {
               </div>
               {!editClicked && (
                 <div className="w-full p-5 flex justify-center items-center">
-                    <p className="text-l mr-3 font-medium">Switch User Mode</p>
-                    <input
-                      type="checkbox"
-                      className="toggle toggle-success"
-                      checked={toggle}
-                      onChange={() => {
-                        setToggle(!toggle);
-                        handleUserTypeChange();
-                      }}
-                    />
+                  <p className="text-l mr-3 font-medium">Switch User Mode</p>
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-success"
+                    checked={toggle}
+                    onChange={() => {
+                      setToggle(!toggle);
+                      handleUserTypeChange();
+                    }}
+                  />
                 </div>
               )}
               <p className="flex justify-between uppercase dark:text-dark dark:opacity-60 text-lg font-bold">
@@ -230,16 +238,16 @@ const Settings = () => {
                       </Form>
                     );
                   }}
-                </Formik>                
+                </Formik>
               </div>
 
               {(userData?.addresses.length > 0 && editClicked && (
                 <p className="leading-normal uppercase dark:text-dark dark:opacity-60 text-lg mt-8 font-bold">
                   Home Addresses
-                </p>)) || !editClicked && 
+                </p>)) || !editClicked &&
                 <p className="leading-normal uppercase dark:text-dark dark:opacity-60 text-lg mt-8 font-bold">
-                  Add Home Address 
-                  </p>    
+                  Add Home Address
+                  </p>
               }
               {!editClicked ? (
                 <Formik
@@ -324,7 +332,7 @@ const Settings = () => {
                 <div className="grid grid-cols-3 gap-8 w-full">
                   {userData &&
                     userData.addresses.map(
-                      ({ country, state, city, street, zipCode, id }: any ,index: number) => (
+                      ({ country, state, city, street, zipCode, id }: any, index: number) => (
                         <div
                           key={id}
                           className="border w-full p-2  relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl "
