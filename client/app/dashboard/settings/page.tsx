@@ -4,6 +4,7 @@ import { Input, PhoneNumberInput } from '@/app/components/Inputs';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import Skeleton from 'react-loading-skeleton';
+import { useRouter } from 'next/navigation';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useUserStore from '../../store/userStore';
@@ -22,6 +23,7 @@ import { settingsApi } from '@/app/api/settings';
 import { Loader } from '@/app/components/Loader';
 
 const Settings = () => {
+  const router =  useRouter();
   const [toggle, setToggle] = useState<boolean>(false);
   const [editClicked, setEditClicked] = useState(true);
   const { userData, setUser } = useUserStore();
@@ -83,6 +85,19 @@ const Settings = () => {
   };
 
   console.log(userData);
+  const handleDeleteAccount = async (id: number) => {
+    try {
+      setPageLoader(true);
+      const response = await settingsApi.deleteUser(id);
+      toast.success(response.data.message);
+      router.refresh();
+      router.push('/signUp');
+    } catch (err: any) {
+      console.log('erorr', err.response);
+    } finally {
+      setPageLoader(false);
+    }
+  }
 
   return (
     <div className="w-full p-6 mx-auto ">
@@ -119,7 +134,7 @@ const Settings = () => {
                       }}
                     />
                   </div>
-                  <button className="btn btn-error text-white">
+                  <button className="btn btn-error text-white" onClick={() => handleDeleteAccount(userData.id)}>
                     Delete Account
                   </button>
                 </div>
@@ -313,10 +328,7 @@ const Settings = () => {
                 <div className="grid grid-cols-3 gap-8 w-full">
                   {userData &&
                     userData.addresses.map(
-                      (
-                        { country, state, city, street, zipCode, id },
-                        index
-                      ) => (
+                      ({ country, state, city, street, zipCode, id }: any ,index: number) => (
                         <div
                           key={id}
                           className="border w-full p-2  relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl "

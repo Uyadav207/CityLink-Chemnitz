@@ -6,7 +6,7 @@ const editContactDetails = (id, payload) =>
   axios.post(`/user/address/${id}`, payload);
 const switchUserMode = (id, payload) =>
   axios.put(`/user/change-type/${id}`, payload);
-const deleteUser = () => axios.delete(`/user/delete/${id}`);
+const deleteUser = (id) => axios.delete(`/user/delete/${id}`);
 
 export const settingsApi = {
   getUser,
