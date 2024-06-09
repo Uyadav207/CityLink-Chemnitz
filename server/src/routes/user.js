@@ -114,7 +114,7 @@ router.post('/address/:userId', authenticateJWT, async (req, res) => {
       });
       if (addresses.length >= 1) {
         return res
-          .status(400)
+          .status(409)
           .json({ error: 'Regular users can only have one address' });
       }
     }
@@ -144,89 +144,87 @@ router.post('/address/:userId', authenticateJWT, async (req, res) => {
   }
 });
 
-// Add a favourite facility for a user
+
+// Toggle favourite facility for a user
 router.post('/favourite/facility/:userId', authenticateJWT, async (req, res) => {
   const { userId } = req.params;
   const { category, objectId } = req.body;
 
   try {
-      // Check if the user exists
-      const user = await prisma.user.findUnique({
-          where: { id: parseInt(userId) },
-      });
+    // Check if the user exists
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+    });
 
-      if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-      }
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
-      // Check if the user already has a favourite Facility
-      const existingFavouriteFacility = await prisma.favouriteFacility.findFirst({
-          where: { userId: parseInt(userId) }
-      });
+    // Check if the facility is already favourited
+    const existingFavourite = await prisma.favouriteFacility.findFirst({
+      where: {
+        userId: parseInt(userId),
+        objectID: parseInt(objectId),
+        category,
+      },
+    });
 
-      if (existingFavouriteFacility) {
-          return res.status(400).json({ error: 'User already has a favourite facility' });
-      }
-
-      // Add the new favourite facility
-      const newFavouriteFacility = await prisma.favouriteFacility.create({
-          data: {
-              category,
-              objectID: parseInt(objectId),
-              userId: parseInt(userId),
-          },
-      });
-
-      res.json({
-          message: 'Favourite facility added successfully',
-          favouriteFacility: newFavouriteFacility,
-      });
-  } catch (error) {
-      res.status(500).json({
-          error: 'Cannot add favourite facility',
-          details: error.message,
-      });
-  }
-});
-
-// Delete a favourite facility for a user
-router.delete('/favourite/facility/:userId', authenticateJWT, async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-      // Check if the user exists
-      const user = await prisma.user.findUnique({
-          where: { id: parseInt(userId) },
-      });
-
-      if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-      }
-
-      // Check if the user has a favourite facility
-      const favouriteFacility = await prisma.favouriteFacility.findFirst({
-          where: { userId: parseInt(userId) }
-      });
-
-      if (!favouriteFacility) {
-          return res.status(404).json({ error: 'Favourite facility not found for this user' });
-      }
-
-      // Delete the favourite facility
+    if (existingFavourite) {
+      // If it is already favourited, remove it
       await prisma.favouriteFacility.delete({
-          where: { id: favouriteFacility.id }
+        where: { id: existingFavourite.id },
       });
 
-      res.json({
-          message: 'Favourite facility deleted successfully'
+      // Fetch the updated user details
+      const updatedUser = await prisma.user.findUnique({
+        where: { id: parseInt(userId) },
+        include: { addresses: true, favouriteFacilities: true },
       });
+
+      return res.status(200).json({
+        message: 'Favourite facility removed successfully',
+        updatedUser,
+      });
+    }
+
+    // Check user type and number of favourite facilities for REGULAR users
+    if (user.userType === 'REGULAR') {
+      const favouriteFacilities = await prisma.favouriteFacility.findMany({
+        where: { userId: parseInt(userId) },
+      });
+
+      if (favouriteFacilities.length >= 1) {
+        return res.status(403).json({ message: 'Regular user can only have one favourite facility. Please delete the existing favourite before adding a new one.' });
+      }
+    }
+
+    // Add the new favourite facility
+    const newFavouriteFacility = await prisma.favouriteFacility.create({
+      data: {
+        category,
+        objectID: parseInt(objectId),
+        userId: parseInt(userId),
+      },
+    });
+
+    // Fetch the updated user details
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: { addresses: true, favouriteFacilities: true },
+    });
+
+    res.status(201).json({
+      message: 'Favourite facility added successfully',
+      favouriteFacility: newFavouriteFacility,
+      updatedUser,
+    });
+
   } catch (error) {
-      res.status(500).json({
-          error: 'Cannot delete favourite facility',
-          details: error.message,
-      });
+    res.status(500).json({
+      error: 'Cannot toggle favourite facility',
+      details: error.message,
+    });
   }
 });
-
 
 module.exports = router;
