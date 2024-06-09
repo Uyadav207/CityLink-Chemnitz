@@ -28,3 +28,33 @@
   height: 100%;
   border: 1px solid #E6E6E6;
 }
+
+.logout {
+  min-width: 350px;
+  width: 250px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 0.35;
+  max-height: 80vh;
+}
+
+.sidebar_Chats {
+  flex: 1;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-behavior: smooth !important;  /* Add this line for smooth scrolling */
+}
+
+.sidebar_Chats::-webkit-scrollbar {
+  display: none;
+}
+
+.notFound {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

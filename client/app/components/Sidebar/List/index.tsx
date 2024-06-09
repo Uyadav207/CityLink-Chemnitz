@@ -22,7 +22,6 @@ const List: React.FC = () => {
 
   useEffect(() => {
     if (dataApi) {
-      console.log(dataApi);
       const timer = setTimeout(() => {
         setLoading(false);
       }, 2000);
@@ -71,7 +70,8 @@ const List: React.FC = () => {
   if (loading || !dataApi) {
     // Show skeletons while data is loading
     return (
-      <ul className="bordered-list">
+      <div className="sidebar_Chats bordered-list">
+        <ul>
         {Array(10)
           .fill(0)
           .map((_, index) => (
@@ -82,7 +82,8 @@ const List: React.FC = () => {
               </div>
             </li>
           ))}
-      </ul>
+          </ul>
+      </div>
     );
   }
 
@@ -116,13 +117,13 @@ const List: React.FC = () => {
   };
 
   return (
-    <div className="vh-100 ">
+    <div className='sidebar'>
       <Search value={searchTerm} onChange={handleSearch} />
       {noResults ? (
-        <div className="text-center py-4 text-gray-600">No results found.</div>
+        <div className="notFound text-center py-4 text-gray-600">No results found.</div>
       ) : (
-        <div className="overflow-auto ">
-          <ul className="bordered-list">
+        <div className="sidebar_Chats bordered-list">
+          <ul>
             {filteredData.map((data: any, index: number) => (
               <li
                 key={index}
@@ -156,12 +157,12 @@ const List: React.FC = () => {
                     <Heart isClick={false} onClick={() => setClick(false)} />
                   )}
                 </button>
-              </li> ))};
+              </li> ))}
           </ul>
         </div>
-      )};
+      )}
     </div>
-  );
-};
+  )
+}
 
 export default List;
