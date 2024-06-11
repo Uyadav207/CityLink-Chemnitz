@@ -5,13 +5,13 @@ import Logout from './Logout';
 
 const Sidebar = () => {
   return (
-    <>
-      <div className=" leftside-bar bg-white-200 px-2 py-6 ">
+    <div className="sidebar leftside-bar">
+      <div className="p-3">
         <Profile />
         <List />
       </div>
-      {/* <Logout /> */}
-    </>
+      <Logout />
+    </div>
   );
 };
 

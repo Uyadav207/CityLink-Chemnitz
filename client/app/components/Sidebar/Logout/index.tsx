@@ -1,13 +1,44 @@
-import React from "react";
-import { faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+"use client"
+// src/components/Logout.tsx
+import React from 'react';
+import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useUserStore from '@/app/store/userStore';
+import useModalStore from '@/app/store/modalStore';
+import Modal from '../../Modal';
 
 const Logout: React.FC = () => {
-    return (
-        <div className="bg-transparent text-bold text-black-500 p-2 mt-20 w-full border-t flex justify-between">
-            <p className="text-lg">Logout</p> <span><FontAwesomeIcon icon={faArrowAltCircleRight} /></span>
-        </div>
+  const { logout } = useUserStore();
+  const { setIsOpen, setModalData } = useModalStore();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('mapData');
+    window.location.href = '/login';
+  };
+
+  const openModal = () => {
+    setModalData(
+      'Confirm Logout',
+      'Are you sure you want to logout?',
+      handleLogout
     );
-}
+    setIsOpen(true);
+  };
+
+  return (
+    <div className="absolute bottom-0 logout bg-gray-100">
+      <p onClick={openModal} className="btn flex bg-gray-100 text-lg text">
+        Logout {''}
+        <span className="ml-3">
+          <FontAwesomeIcon icon={faArrowAltCircleRight} />
+        </span>
+      </p>
+      <Modal />
+    </div>
+  );
+};
 
 export default Logout;

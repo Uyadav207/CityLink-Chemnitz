@@ -19,7 +19,7 @@ const authenticateJWT = async (req, res, next) => {
         req.user = user;
         next();
     } catch (err) {
-        res.status(400).json({ message: 'Invalid token.' });
+        res.status(401).json({ message: 'Invalid token.' });
     }
 };
 

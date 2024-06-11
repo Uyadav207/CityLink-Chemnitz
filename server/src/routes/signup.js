@@ -10,12 +10,30 @@ router.post('/auth', async (req, res) => {
 
     try {
         // Check if the username already exists
-        const existingUser = await prisma.user.findUnique({
-            where: { username: username, email: email },
+        const existingUsername = await prisma.user.findUnique({
+            where: { username: username },
         });
 
-        if (existingUser) {
-            return res.status(409).json({ message: 'Username or Email already taken' });
+        if (existingUsername) {
+            return res.status(401).json({ error: 'Username already taken' });
+        }
+
+        // Check if the email already exists
+        const existingEmail = await prisma.user.findUnique({
+            where: { email: email },
+        });
+
+        if (existingEmail) {
+            return res.status(401).json({ error: 'Email already taken' });
+        }
+
+        // Check if the phone number already exists
+        const existingPhoneNo = await prisma.user.findUnique({
+            where: { phoneNo: phoneNo },
+        });
+
+        if (existingPhoneNo) {
+            return res.status(401).json({ error: 'Phone number already taken' });
         }
 
         // Hash the password

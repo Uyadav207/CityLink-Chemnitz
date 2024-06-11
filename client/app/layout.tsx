@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import ToastMessage from './components/Toast';
+import Modal from './components/Modal';
 // import Font Awesome CSS
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -23,8 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="light">
       <body className={inter.className}>
-        <ToastMessage />
         {children}
+        <ToastMessage />
+        <Modal />
       </body>
     </html>
   );

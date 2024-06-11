@@ -28,11 +28,73 @@ router.put('/edit/:id', authenticateJWT, async (req, res) => {
       data: { username, password, firstName, lastName, phoneNo, email },
       include: { addresses: true, favouriteFacilities: true } ,
     });
-    res.json({ message: 'User updated successfully', user: updatedUser });
+    res.json({ message: 'User updated successfully', updatedUser });
   } catch (error) {
     res
       .status(500)
       .json({ error: 'Cannot update user', details: error.message });
+  }
+});
+
+// Edit user address
+router.put('/edit/address/:userId', authenticateJWT, async (req, res) => {
+  const { userId } = req.params;
+  const { street, city, state, zipCode, country, id } = req.body;
+  try {
+    await prisma.address.update({
+      where: { userId: parseInt(userId), id: parseInt(id) },
+      data: { street, city, state, zipCode, country },
+    });
+
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: { addresses: true, favouriteFacilities: true },
+    });
+
+    res.status(200).json({ message: 'Address updated successfully', updatedUser});
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'Cannot update address', details: error.message });
+  }
+});
+
+// DELETE route to remove an address based on userId and address id
+router.delete('/delete/address/:userId/:addressId', authenticateJWT, async (req, res) => {
+  const { userId, addressId } = req.params;
+
+  try {
+    // Check if the address exists for the user
+    const address = await prisma.address.findUnique({
+      where: {
+        id: parseInt(addressId),
+        userId: parseInt(userId),
+      },
+    });
+
+    if (!address) {
+      return res.status(401).json({ error: 'Address not found' });
+    }
+
+    // Delete the address
+    await prisma.address.delete({
+      where: {
+        id: parseInt(addressId),
+        userId: parseInt(userId),
+      },
+    });
+
+    // Fetch the updated user data
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: { addresses: true, favouriteFacilities: true },
+    });
+
+    res.status(200).json({ message: 'Address deleted successfully', updatedUser });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'Cannot delete address', details: error.message });
   }
 });
 
@@ -81,6 +143,14 @@ router.put('/change-type/:id', authenticateJWT, async (req, res) => {
   }
 
   try {
+    if(userType === 'REGULAR') {
+      await prisma.favouriteFacility.deleteMany({
+        where: { userId: parseInt(id) },
+      });
+      await prisma.address.deleteMany({
+        where: { userId: parseInt(id)}
+      });
+    }
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(id) },
       data: { userType },
@@ -114,7 +184,7 @@ router.post('/address/:userId', authenticateJWT, async (req, res) => {
       });
       if (addresses.length >= 1) {
         return res
-          .status(400)
+          .status(401)
           .json({ error: 'Regular users can only have one address' });
       }
     }
@@ -144,89 +214,87 @@ router.post('/address/:userId', authenticateJWT, async (req, res) => {
   }
 });
 
-// Add a favourite facility for a user
+
+// Toggle favourite facility for a user
 router.post('/favourite/facility/:userId', authenticateJWT, async (req, res) => {
   const { userId } = req.params;
   const { category, objectId } = req.body;
 
   try {
-      // Check if the user exists
-      const user = await prisma.user.findUnique({
-          where: { id: parseInt(userId) },
-      });
+    // Check if the user exists
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+    });
 
-      if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-      }
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
-      // Check if the user already has a favourite Facility
-      const existingFavouriteFacility = await prisma.favouriteFacility.findFirst({
-          where: { userId: parseInt(userId) }
-      });
+    // Check if the facility is already favourited
+    const existingFavourite = await prisma.favouriteFacility.findFirst({
+      where: {
+        userId: parseInt(userId),
+        objectID: parseInt(objectId),
+        category,
+      },
+    });
 
-      if (existingFavouriteFacility) {
-          return res.status(400).json({ error: 'User already has a favourite facility' });
-      }
-
-      // Add the new favourite facility
-      const newFavouriteFacility = await prisma.favouriteFacility.create({
-          data: {
-              category,
-              objectID: parseInt(objectId),
-              userId: parseInt(userId),
-          },
-      });
-
-      res.json({
-          message: 'Favourite facility added successfully',
-          favouriteFacility: newFavouriteFacility,
-      });
-  } catch (error) {
-      res.status(500).json({
-          error: 'Cannot add favourite facility',
-          details: error.message,
-      });
-  }
-});
-
-// Delete a favourite facility for a user
-router.delete('/favourite/facility/:userId', authenticateJWT, async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-      // Check if the user exists
-      const user = await prisma.user.findUnique({
-          where: { id: parseInt(userId) },
-      });
-
-      if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-      }
-
-      // Check if the user has a favourite facility
-      const favouriteFacility = await prisma.favouriteFacility.findFirst({
-          where: { userId: parseInt(userId) }
-      });
-
-      if (!favouriteFacility) {
-          return res.status(404).json({ error: 'Favourite facility not found for this user' });
-      }
-
-      // Delete the favourite facility
+    if (existingFavourite) {
+      // If it is already favourited, remove it
       await prisma.favouriteFacility.delete({
-          where: { id: favouriteFacility.id }
+        where: { id: existingFavourite.id },
       });
 
-      res.json({
-          message: 'Favourite facility deleted successfully'
+      // Fetch the updated user details
+      const updatedUser = await prisma.user.findUnique({
+        where: { id: parseInt(userId) },
+        include: { addresses: true, favouriteFacilities: true },
       });
+
+      return res.status(200).json({
+        message: 'Favourite facility removed successfully',
+        updatedUser,
+      });
+    }
+
+    // Check user type and number of favourite facilities for REGULAR users
+    if (user.userType === 'REGULAR') {
+      const favouriteFacilities = await prisma.favouriteFacility.findMany({
+        where: { userId: parseInt(userId) },
+      });
+
+      if (favouriteFacilities.length >= 1) {
+        return res.status(401).json({ error: 'Regular user can have one favourite' });
+      }
+    }
+
+    // Add the new favourite facility
+    const newFavouriteFacility = await prisma.favouriteFacility.create({
+      data: {
+        category,
+        objectID: parseInt(objectId),
+        userId: parseInt(userId),
+      },
+    });
+
+    // Fetch the updated user details
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: { addresses: true, favouriteFacilities: true },
+    });
+
+    res.status(201).json({
+      message: 'Favourite facility added successfully',
+      favouriteFacility: newFavouriteFacility,
+      updatedUser,
+    });
+
   } catch (error) {
-      res.status(500).json({
-          error: 'Cannot delete favourite facility',
-          details: error.message,
-      });
+    res.status(500).json({
+      error: 'Cannot toggle favourite facility',
+      details: error.message,
+    });
   }
 });
-
 
 module.exports = router;
