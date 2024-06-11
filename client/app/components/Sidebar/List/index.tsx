@@ -15,6 +15,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faHeartCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import useUserStore from '@/app/store/userStore';
 import toast from 'react-hot-toast';
+import CustomToast from '../../CustomToast';
+import CustomToaster from '../../CustomToast';
 
 const List: React.FC = () => {
   const router = useRouter();
@@ -162,6 +164,7 @@ const List: React.FC = () => {
                 onClick={() => {
                   // updateQueryParam('id', data.attributes.OBJECTID);
                   setSelectedFacility(data);
+                  // CustomToast();
                 }}
               >
                 <div className="flex flex-col w-4/5">

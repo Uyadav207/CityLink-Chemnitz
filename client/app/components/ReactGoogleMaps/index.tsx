@@ -2,21 +2,9 @@
 
 import { useLoadScript } from '@react-google-maps/api';
 
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-} from 'react';
-import {
-  GoogleMap,
-  Marker,
-  DirectionsRenderer,
-  InfoWindow,
-} from '@react-google-maps/api';
+import React, { useState, useEffect, useMemo } from 'react';
+import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
 
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import {
   schule,
   Schulsozialarbeit,
@@ -25,25 +13,13 @@ import {
 } from '../../api/apiConfig';
 
 import './maps.css';
-// import Sidebar from '../../components/Sidebar';
-// import AddressDropDown from '../../components/Sidebar/AddressDropDown';
 import convertHomeAddress from '@/app/dashboard/citylink/ConvertAddress';
 import useDataStore from '@/app/store/mapStore';
-import mapApiUri from '../../api/mapApi';
+import { mapApiUri } from '../../api/mapApi';
 import useUserStore from '@/app/store/userStore';
-import Modal from '../Modal';
-import ModalPopup from '../ModalPopup';
 import SpringModal from '../SpringModal';
-
-// const containerStyle = {
-//   width: '400px',
-//   height: '400px',
-// };
-
-// const center = {
-//   lat: -3.745,
-//   lng: -38.523,
-// };
+import CustomToast from '../CustomToast';
+import AddressDropDown from '../Sidebar/AddressDropDown';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type DirectionsResult = google.maps.DirectionsResult;
@@ -98,24 +74,6 @@ function ReactGoogleMaps() {
     []
   );
 
-  //   const fetchDirections = (house: LatLngLiteral) => {
-  //     if (!office) return;
-
-  //     const service = new google.maps.DirectionsService();
-  //     service.route(
-  //       {
-  //         origin: house,
-  //         destination: office,
-  //         travelMode: google.maps.TravelMode.DRIVING,
-  //       },
-  //       (result, status) => {
-  //         if (status === 'OK' && result) {
-  //           setDirections(result);
-  //         }
-  //       }
-  //     );
-  //   };
-
   const [showPopup, setShowPopup] = useState<boolean>(true);
   const {
     userData,
@@ -140,6 +98,8 @@ function ReactGoogleMaps() {
   const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
 
   const [mapRef, setMapRef] = useState();
+
+  const { setMapDirections } = useDataStore();
 
   const onLoad = (map: any) => {
     // features?.forEach(({ geometry }) =>
@@ -167,8 +127,6 @@ function ReactGoogleMaps() {
 
   const [currentPosition, setCurrentPosition] = useState(null);
 
-  console.log(currentPosition);
-
   const fetchDirections = (house: LatLngLiteral) => {
     if (!currentPosition) return;
 
@@ -182,14 +140,13 @@ function ReactGoogleMaps() {
       (result, status) => {
         if (status === 'OK' && result) {
           setDirections(result);
+          CustomToast({ result: result });
         }
       }
     );
   };
 
   useEffect(() => {
-    console.log('ssssssssssssssssssssss');
-
     if (selectedFacility) {
       const house = {
         lat: selectedFacility.geometry.y,
@@ -311,9 +268,8 @@ function ReactGoogleMaps() {
   const handleExpand = (lat, lng) => {
     // mapRef?.setZoom(15);
     // mapRef?.panTo({ lat, lng });
-    setTimeout(() => {
-      setIsExpanded(true);
-    }, 300);
+    setIsExpanded(true);
+
     // setIsExpanded(true);
   };
 
@@ -326,122 +282,132 @@ function ReactGoogleMaps() {
   return !isLoaded ? (
     <div>Loading...</div>
   ) : (
-    <div className="map">
-      <GoogleMap
-        zoom={14}
-        center={center}
-        mapContainerClassName="map-container"
-        options={options}
-        onLoad={onLoad}
-      >
-        {directions && (
-          <DirectionsRenderer
-            directions={directions}
-            options={{
-              suppressMarkers: true,
-              polylineOptions: {
-                zIndex: 50,
-                strokeColor: '#1976D2',
-                strokeWeight: 5,
-              },
-            }}
-          />
-        )}
-        {features.map((feature, index) => (
-          <Marker
-            key={index}
-            position={{ lat: feature.geometry.y, lng: feature.geometry.x }}
-            icon={
-              currentCategory === 'SCHULE'
-                ? {
-                    url: 'https://cdn-icons-png.flaticon.com/32/11542/11542151.png',
+    <>
+      <div className="map">
+        <GoogleMap
+          zoom={14}
+          center={center}
+          mapContainerClassName="map-container"
+          options={options}
+          onLoad={onLoad}
+        >
+          {directions && (
+            <DirectionsRenderer
+              directions={directions}
+              options={{
+                suppressMarkers: true,
+                polylineOptions: {
+                  zIndex: 50,
+                  strokeColor: '#1976D2',
+                  strokeWeight: 5,
+                },
+              }}
+            />
+          )}
+          {features.map((feature, index) => (
+            <Marker
+              key={index}
+              position={{ lat: feature.geometry.y, lng: feature.geometry.x }}
+              icon={
+                currentCategory === 'SCHULE'
+                  ? {
+                      url: 'https://cdn-icons-png.flaticon.com/32/11542/11542151.png',
 
-                    scaledSize: new google.maps.Size(30, 30),
-                  }
-                : {
-                    url: 'https://cdn-icons-png.flaticon.com/32/6162/6162025.png',
+                      scaledSize: new google.maps.Size(30, 30),
+                    }
+                  : {
+                      url: 'https://cdn-icons-png.flaticon.com/32/6162/6162025.png',
 
-                    scaledSize: new google.maps.Size(20, 20),
-                  }
-            }
-            onClick={() => {
-              setSelectedMarker(feature);
-              handleMarkerClick(feature.geometry.y, feature.geometry.x);
-              showInfoOnClick(feature.attributes);
-              handleExpand(feature.geometry.y, feature.geometry.x);
-            }}
-          ></Marker>
-        ))}
+                      scaledSize: new google.maps.Size(20, 20),
+                    }
+              }
+              onClick={() => {
+                setSelectedMarker(feature);
+                handleMarkerClick(feature.geometry.y, feature.geometry.x);
+                showInfoOnClick(feature);
+                handleExpand(feature.geometry.y, feature.geometry.x);
+              }}
+            ></Marker>
+          ))}
 
-        {currentPosition && (
-          <Marker
-            //   onClick={() => {
-            //     handleMarkerClick(currentPosition.lat, feature.geometry.x);
-            //   }}
-            position={currentPosition}
-            icon={{
-              url: 'https://cdn-icons-png.flaticon.com/32/16001/16001356.png',
-            }}
-          ></Marker>
-        )}
-        {/* <ModalPopup
-          isExpanded={isExpanded}
-          handleExpand={handleExpand}
-          handleCollapse={handleCollapse}
-        /> */}
-        <SpringModal
-          info={info}
-          isOpen={isExpanded}
-          setIsOpen={setIsExpanded}
-        />
+          {currentPosition && (
+            <Marker
+              //   onClick={() => {
+              //     handleMarkerClick(currentPosition.lat, feature.geometry.x);
+              //   }}
+              position={currentPosition}
+              icon={{
+                url: 'https://cdn-icons-png.flaticon.com/32/1865/1865269.png',
+              }}
+            ></Marker>
+          )}
 
-        <div className="absolute top-20 flex space-x-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2">
-          <button
-            className="flex-1 btn bg-white shadow-l"
-            onClick={() => {
-              handleApiTrigger(schule);
-              setCurrentCategory('SCHULE');
-              setSelectedFacility('');
-            }}
-          >
-            schule
-          </button>
-          <button
-            className="flex-1 btn bg-white shadow-l"
-            onClick={() => {
-              handleApiTrigger(Schulsozialarbeit);
-              setCurrentCategory('SCHULSOZIALARBEIT');
-            }}
-          >
-            Schulsozialarbeit
-          </button>
-          <button
-            className="flex-1 btn bg-white shadow-l"
-            onClick={() => {
-              handleApiTrigger(Kindertageseinrichtungen);
-              setCurrentCategory('KINDERTAGESEINRICHTUNGEN');
-            }}
-          >
-            Kindertageseinrichtungen
-          </button>
-          <button
-            className="flex-1 btn bg-white shadow-l"
-            onClick={() => {
-              handleApiTrigger(Jugendberufshilfe);
-              setCurrentCategory('JUGENDBERUFSHILFE');
-            }}
-          >
-            Jugendberufshilfe
-          </button>
+          <div className="absolute bottom-10 flex space-x-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2">
+            <button
+              className="flex-1 btn bg-white shadow-l"
+              onClick={() => {
+                handleApiTrigger(schule);
+                setCurrentCategory('SCHULE');
+                setSelectedFacility('');
+              }}
+            >
+              schule
+            </button>
+            <button
+              className="flex-1 btn bg-white shadow-l"
+              onClick={() => {
+                handleApiTrigger(Schulsozialarbeit);
+                setCurrentCategory('SCHULSOZIALARBEIT');
+              }}
+            >
+              Schulsozialarbeit
+            </button>
+            <button
+              className="flex-1 btn bg-white shadow-l"
+              onClick={() => {
+                handleApiTrigger(Kindertageseinrichtungen);
+                setCurrentCategory('KINDERTAGESEINRICHTUNGEN');
+              }}
+            >
+              Kindertageseinrichtungen
+            </button>
+            <button
+              className="flex-1 btn bg-white shadow-l"
+              onClick={() => {
+                handleApiTrigger(Jugendberufshilfe);
+                setCurrentCategory('JUGENDBERUFSHILFE');
+              }}
+            >
+              Jugendberufshilfe
+            </button>
+          </div>
+
+          <div className="absolute top-0">
+            <SpringModal
+              fetchDirections={fetchDirections}
+              info={info}
+              isOpen={isExpanded}
+              setIsOpen={setIsExpanded}
+            />
+          </div>
+        </GoogleMap>
+        <div className="absolute top-10 left-[40%] ">
+          <AddressDropDown>
+            {addressList &&
+              addressList.map((item) => (
+                <li key={item.id} className="menu-title">
+                  <button
+                    onClick={() => handleClickGeolocation(item.name)}
+                    className="flex items-center space-x-2"
+                  >
+                    <span>{item.name}</span>
+                  </button>
+                </li>
+              ))}
+          </AddressDropDown>
         </div>
-
-        {/* <Modal
-          isModalOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          info={info}
-        /> */}
-      </GoogleMap>
-    </div>
+      </div>
+    </>
   );
 }
 

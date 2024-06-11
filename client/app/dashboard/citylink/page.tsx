@@ -5,7 +5,7 @@ import ReactGoogleMaps from '@/app/components/ReactGoogleMaps';
 
 const App: React.FC = () => {
   return (
-    <div className="flex ">
+    <div className="flex relative">
       <Sidebar />
 
       <ReactGoogleMaps />
