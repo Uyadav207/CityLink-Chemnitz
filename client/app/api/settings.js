@@ -7,6 +7,8 @@ const editContactDetails = (id, payload) =>
 const switchUserMode = (id, payload) =>
   axios.put(`/user/change-type/${id}`, payload);
 const deleteUser = (id) => axios.delete(`/user/delete/${id}`);
+const updateAddress = (id, payload) => axios.put(`/user/edit/address/${id}`, payload);
+const deleteAddress = (id, addressId) => axios.delete(`/user/delete/address/${id}/${addressId}`);
 
 export const settingsApi = {
   getUser,
@@ -14,4 +16,6 @@ export const settingsApi = {
   editContactDetails,
   switchUserMode,
   deleteUser,
+  updateAddress,
+  deleteAddress
 };

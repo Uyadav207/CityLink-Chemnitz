@@ -29,8 +29,8 @@ const Logout: React.FC = () => {
   };
 
   return (
-    <div className="absolute bottom-0 logout">
-      <p onClick={openModal} className="btn flex text-lg text">
+    <div className="absolute bottom-0 logout bg-gray-100">
+      <p onClick={openModal} className="btn flex bg-gray-100 text-lg text">
         Logout {''}
         <span className="ml-3">
           <FontAwesomeIcon icon={faArrowAltCircleRight} />
