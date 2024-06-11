@@ -10,6 +10,7 @@ import calculateDistance from './Distance';
 import { favoriteFacilityApi } from '@/app/api/favorite';
 import useUserStore from '@/app/store/userStore';
 import toast from 'react-hot-toast';
+import { Just_Another_Hand } from 'next/font/google';
 
 const List: React.FC = () => {
   const { homeCoords, dataApi } = useDataStore();
@@ -127,8 +128,9 @@ const List: React.FC = () => {
             {filteredData.map((data: any, index: number) => (
               <li
                 key={index}
-                className="mb-2 hover:bg-gray-100 pl-2 rounded-md cursor-pointer flex border-b items-center max-w-80"
+                className="mb-2 hover:bg-gray-100 cursor-pointer flex items-center max-w-80 liSidebar"
               >
+        
                 <div className="flex flex-col w-4/5">
                   <h1 className="text-sm font-bold truncate">
                     {data.attributes.TRAEGER}
@@ -147,8 +149,8 @@ const List: React.FC = () => {
                     <span className="truncate">{data.attributes.STRASSE}</span>
                   </p>
                 </div>
-                <button
-                  className={'focus:outline-none w-14 h-14 flex items-center justify-self-auto rounded-full'}
+                <div
+                  className={'focus:outline-none flex items-center rounded-full heart'}
                   onClick={() => toggleFavorite(data.attributes.OBJECTID)}
                 >
                   {(userData.favouriteFacilities.find((facility: any) =>(data.attributes.OBJECTID === facility?.objectID && currentCategory === facility?.category))) ? (
@@ -156,7 +158,7 @@ const List: React.FC = () => {
                   ) : (
                     <Heart isClick={false} onClick={() => setClick(false)} />
                   )}
-                </button>
+                </div>
               </li> ))}
           </ul>
         </div>

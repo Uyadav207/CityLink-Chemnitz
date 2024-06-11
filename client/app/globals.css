@@ -58,3 +58,19 @@
   justify-content: center;
   align-items: center;
 }
+
+.heart {
+  position: relative;
+  height: 10px;
+  width: 64px;
+  justify-content: space-between;
+  margin-right: 0 !important;
+}
+
+.liSidebar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}

@@ -28,11 +28,73 @@ router.put('/edit/:id', authenticateJWT, async (req, res) => {
       data: { username, password, firstName, lastName, phoneNo, email },
       include: { addresses: true, favouriteFacilities: true } ,
     });
-    res.json({ message: 'User updated successfully', user: updatedUser });
+    res.json({ message: 'User updated successfully', updatedUser });
   } catch (error) {
     res
       .status(500)
       .json({ error: 'Cannot update user', details: error.message });
+  }
+});
+
+// Edit user address
+router.put('/edit/address/:userId', authenticateJWT, async (req, res) => {
+  const { userId } = req.params;
+  const { street, city, state, zipCode, country, id } = req.body;
+  try {
+    await prisma.address.update({
+      where: { userId: parseInt(userId), id: parseInt(id) },
+      data: { street, city, state, zipCode, country },
+    });
+
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: { addresses: true, favouriteFacilities: true },
+    });
+
+    res.status(200).json({ message: 'Address updated successfully', updatedUser});
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'Cannot update address', details: error.message });
+  }
+});
+
+// DELETE route to remove an address based on userId and address id
+router.delete('/delete/address/:userId/:addressId', authenticateJWT, async (req, res) => {
+  const { userId, addressId } = req.params;
+
+  try {
+    // Check if the address exists for the user
+    const address = await prisma.address.findUnique({
+      where: {
+        id: parseInt(addressId),
+        userId: parseInt(userId),
+      },
+    });
+
+    if (!address) {
+      return res.status(401).json({ error: 'Address not found' });
+    }
+
+    // Delete the address
+    await prisma.address.delete({
+      where: {
+        id: parseInt(addressId),
+        userId: parseInt(userId),
+      },
+    });
+
+    // Fetch the updated user data
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: { addresses: true, favouriteFacilities: true },
+    });
+
+    res.status(200).json({ message: 'Address deleted successfully', updatedUser });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'Cannot delete address', details: error.message });
   }
 });
 
@@ -81,6 +143,14 @@ router.put('/change-type/:id', authenticateJWT, async (req, res) => {
   }
 
   try {
+    if(userType === 'REGULAR') {
+      await prisma.favouriteFacility.deleteMany({
+        where: { userId: parseInt(id) },
+      });
+      await prisma.address.deleteMany({
+        where: { userId: parseInt(id)}
+      });
+    }
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(id) },
       data: { userType },
