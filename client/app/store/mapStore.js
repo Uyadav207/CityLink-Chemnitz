@@ -8,6 +8,8 @@ const useDataStore = create(
       homeCoords: null,
       setData: (value) => set(() => ({ dataApi: value })),
       setHomeCoords: (value) => set(() => ({ homeCoords: value })),
+      mapDirections: null,
+      setMapDirections: (value) => set(() => ({ mapDirections: value })),
     }),
     {
       name: 'mapData', // name of the item in the storage (must be unique)

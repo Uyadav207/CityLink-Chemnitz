@@ -1,4 +1,4 @@
-'use client'
+'use client';
 // src/components/Modal.tsx
 import React from 'react';
 import useModalStore from '@/app/store/modalStore';

@@ -6,8 +6,10 @@ const useUserStore = create(
     (set) => ({
       userData: null,
       currentCategory: 'SCHULE',
+      selectedFacility: '',
       setUser: (value) => set(() => ({ userData: value })),
       setCurrentCategory: (value) => set(() => ({ currentCategory: value })),
+      setSelectedFacility: (value) => set(() => ({ selectedFacility: value })),
       logout: () => set({ userData: null }),
     }),
     {

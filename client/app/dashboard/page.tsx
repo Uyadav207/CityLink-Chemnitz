@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import React from 'react';
+import ModalPopup from '../components/ModalPopup';
 // import { userApi } from '../api/settings';
 
 const Dashboard = () => {
@@ -20,7 +21,14 @@ const Dashboard = () => {
   //   }
   // };
 
-  return <h1 className="text-center">Dashboard</h1>;
+  return (
+    <>
+      <h1 className="text-center">Dashboard</h1>
+      <div className="flex items-center min-h-sceeen">
+        <ModalPopup />
+      </div>
+    </>
+  );
 };
 
 export default Dashboard;
