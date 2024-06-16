@@ -28,7 +28,7 @@ const CustomToast = ({ result }: { result: any }) => {
             </div>
           </div>
         </div>
-        <div className="flex border-l border-gray-200 z-50">
+        <div className="flex border-l border-gray-200 ">
           <button
             onClick={() => {
               console.log('hereee', t.id);
@@ -44,6 +44,7 @@ const CustomToast = ({ result }: { result: any }) => {
     ),
     {
       duration: 500,
+      position: 'top-right',
     }
   );
 };

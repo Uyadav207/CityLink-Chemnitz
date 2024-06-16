@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './springModal.css';
 import {
   faClose,
   faEnvelope,
@@ -44,7 +43,7 @@ const SpringModal = ({
             }}
             exit={{ scale: 0, rotate: '0deg' }}
             onClick={(e) => e.stopPropagation()}
-            className="absolute top-[25%] left-[50%]  transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br bg-white    p-6 rounded-lg w-[20%] shadow-2xl  "
+            className="fixed top-[25%] left-1/5 xl:left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br bg-white  p-6 rounded-lg w-[90%] md:w-[60%] lg:w-[50%] xl:w-[30%] 2xl:w-[20%] shadow-2xl  "
           >
             <div
               onClick={() => setIsOpen(false)}
@@ -53,7 +52,7 @@ const SpringModal = ({
               <FontAwesomeIcon size="lg" icon={faClose} color="black" />
             </div>
             <div className={`relative  ${isFlipped ? 'hidden' : ''}`}>
-              <div className="max-w-sm bg-gray-400-900 text-black rounded-lg p-4">
+              <div className=" bg-gray-400-900 text-black rounded-lg p-4">
                 <div className="flex items-center mb-4">
                   <div>
                     <h2 className="text-xl font-bold">

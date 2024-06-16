@@ -1,7 +1,6 @@
 .map-container {
   position: relative;
     width: 100%;
-    border: 2px solid #000;
     height: 100vh;
   }
   
@@ -11,14 +10,3 @@
     height: 100vh;
   }
 
-
-  
-
-/* 
-  .gm-style-iw{
-    background-color: aqua !important;
-  }
-
-  .gm-style-iw-d{
-    background-color: aqua !important;
-  } */

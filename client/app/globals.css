@@ -29,15 +29,11 @@
   border: 1px solid #E6E6E6;
 }
 
-.logout {
-  min-width: 350px;
-  width: 250px;
-}
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  flex: 0.35;
+  /* border: 2px solid #000000; */
   max-height: 80vh;
 }
 
@@ -45,13 +41,12 @@
   flex: 1;
   background-color: white;
   overflow-y: scroll;
-  overflow-x: hidden;
   scroll-behavior: smooth !important;  /* Add this line for smooth scrolling */
 }
 
-.sidebar_Chats::-webkit-scrollbar {
+/* .sidebar_Chats::-webkit-scrollbar {
   display: none;
-}
+} */
 
 .notFound {
   display: flex;
@@ -86,9 +81,9 @@
 }
 
 #scrollableDiv::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background-color: #27be8716;
-  border: 2px solid #27be8716;
+  border-radius: 10px;
+  background-color: #e6e6e6c9;
+  border: 2px solid #e6e6e6c9;
 }
 
 .animated-popup {
