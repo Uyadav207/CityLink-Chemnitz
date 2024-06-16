@@ -1,4 +1,4 @@
-"use client"
+'use client';
 // src/components/Logout.tsx
 import React from 'react';
 import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons';
@@ -29,9 +29,12 @@ const Logout: React.FC = () => {
   };
 
   return (
-    <div className="absolute bottom-0 logout bg-gray-100">
-      <p onClick={openModal} className="btn flex bg-gray-100 text-lg text">
-        Logout {''}
+    <div
+      onClick={openModal}
+      className="absolute bottom-2 w-full cursor-pointer"
+    >
+      <p className="flex justify-center w-3/4 rounded-lg border border-gray-400 btn text-base mx-auto">
+        Logout
         <span className="ml-3">
           <FontAwesomeIcon icon={faArrowAltCircleRight} />
         </span>

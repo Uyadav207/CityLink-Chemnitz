@@ -20,7 +20,7 @@ import {
 import AddressDropDown from '../../components/Sidebar/AddressDropDown';
 import convertHomeAddress from '@/app/dashboard/citylink/ConvertAddress';
 import useDataStore from '@/app/store/mapStore';
-import mapApiUri from '../../api/mapApi';
+import { mapApiUri } from '../../api/mapApi';
 import useUserStore from '@/app/store/userStore';
 
 interface Coordinates {
@@ -124,7 +124,7 @@ const MainMap = () => {
 
   const handleGeocode = async (address: string) => {
     try {
-      const coords: Coordinates = await getGeocode(address, apiKey);
+      const coords: any = await getGeocode(address, apiKey);
       setCoordinates(coords);
       setHomeCoords(coords);
     } catch (error) {

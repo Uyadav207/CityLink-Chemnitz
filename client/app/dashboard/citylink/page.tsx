@@ -1,19 +1,21 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar';
-import MainMap from '@/app/components/Map';
 import ReactGoogleMaps from '@/app/components/ReactGoogleMaps';
+import MobileView from '@/app/components/Sidebar/MobileView';
+import isAuth from '@/app/helpers/protectedRoute';
+import { NextPage } from 'next';
 
-const App: React.FC = () => {
+const CityLink: NextPage = () => {
+  const [showSidebar, setShowSidebar] = useState(false);
   return (
-    <div className="flex relative">
-      <Sidebar />
-
+    <div className="flex relative ">
+      <MobileView setter={setShowSidebar} />
+      <Sidebar show={showSidebar} setter={setShowSidebar} />
       <ReactGoogleMaps />
-
-      {/* <MapBox /> */}
-      {/* <MainMap /> */}
     </div>
   );
 };
 
-export default App;
+export default isAuth(CityLink);

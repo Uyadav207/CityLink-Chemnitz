@@ -6,6 +6,8 @@ const useDataStore = create(
     (set) => ({
       dataApi: null,
       homeCoords: null,
+      loader: false,
+      setLoader: (value) => set(() => ({ loader: value })),
       setData: (value) => set(() => ({ dataApi: value })),
       setHomeCoords: (value) => set(() => ({ homeCoords: value })),
       mapDirections: null,

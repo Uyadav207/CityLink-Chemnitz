@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './springModal.css';
 import {
   faClose,
   faEnvelope,
@@ -9,6 +8,7 @@ import {
   faMapLocationDot,
   faPhone,
 } from '@fortawesome/free-solid-svg-icons';
+import toast from 'react-hot-toast';
 
 type SpringModalProps = {
   fetchDirections: (arg0: { lat: number; lng: number }) => void;
@@ -44,7 +44,7 @@ const SpringModal = ({
             }}
             exit={{ scale: 0, rotate: '0deg' }}
             onClick={(e) => e.stopPropagation()}
-            className="absolute top-[25%] left-[50%]  transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br bg-white    p-6 rounded-lg w-[20%] shadow-2xl  "
+            className="fixed top-[20%] left-[30%] lg:left-[40%] transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br bg-white p-6 rounded-lg w-[90%] md:w-[60%] lg:w-[50%] xl:w-[30%]  shadow-2xl  "
           >
             <div
               onClick={() => setIsOpen(false)}
@@ -53,7 +53,7 @@ const SpringModal = ({
               <FontAwesomeIcon size="lg" icon={faClose} color="black" />
             </div>
             <div className={`relative  ${isFlipped ? 'hidden' : ''}`}>
-              <div className="max-w-sm bg-gray-400-900 text-black rounded-lg p-4">
+              <div className=" bg-gray-400-900 text-black rounded-lg p-4">
                 <div className="flex items-center mb-4">
                   <div>
                     <h2 className="text-xl font-bold">
@@ -78,10 +78,18 @@ const SpringModal = ({
                   <p className="text-sm">{attributes.BEZEICHNUNGZUSATZ}</p>
                 </div>
                 <div className=" flex space-y-4 flex-col">
-                  <div className="flex items-center ">
+                  <div
+                    onClick={() => {
+                      navigator.clipboard.writeText(attributes.TELEFON);
+                      toast.success('Phone number copied to clipboard!');
+                    }}
+                    className="flex items-center "
+                  >
                     <FontAwesomeIcon size="lg" icon={faPhone} color="black" />
                     <h5 className="text-black text-base font-normal leading-6 ml-5 hover:font-medium">
-                      {attributes.TELEFON}
+                      {attributes.TELEFON
+                        ? attributes.TELEFON
+                        : 'Not Available'}
                     </h5>
                   </div>
                   <div className="border-b-2 border-gray-400"></div>
@@ -91,9 +99,14 @@ const SpringModal = ({
                       icon={faEnvelope}
                       color="black"
                     />
-                    <h5 className="text-black text-base font-normal leading-6 ml-5 hover:font-medium">
-                      {attributes.EMAIL}
-                    </h5>
+
+                    <a
+                      href={`https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${attributes.EMAIL}`}
+                      target="_blank"
+                      className="text-black text-base font-normal leading-6 ml-5 hover:font-medium"
+                    >
+                      {attributes.EMAIL ? attributes.EMAIL : 'Not Available'}
+                    </a>
                   </div>
                   <div className="border-b-2 border-gray-400"></div>
                   <div className="flex items-center ">
@@ -107,11 +120,16 @@ const SpringModal = ({
                     </h5>
                   </div>
                   <div className="border-b-2 border-gray-400"></div>
-                  <div className="flex items-center overflow-wrap break-word  ">
+                  <div className="flex items-center w-full ">
                     <FontAwesomeIcon size="lg" icon={faGlobe} color="black" />
-                    <h5 className=" text-black text-base font-normal leading-6 ml-5  hover:font-medium transition-colors duration-200">
-                      {attributes.WWW}
-                    </h5>
+                    <a
+                      href={attributes.WWW}
+                      target="_blank"
+                      className="w-full break-all  text-black text-base font-normal leading-6 ml-5  hover:font-medium transition-colors duration-200"
+                    >
+                      {' '}
+                      {attributes.WWW ? attributes.WWW : 'Not Available'}
+                    </a>
                   </div>
                   <div className="border-b-2 border-gray-400"></div>
                 </div>
@@ -137,35 +155,39 @@ const SpringModal = ({
                 <div className="flex items-center ">
                   <p className="font-bold w-1/6">Creator</p>
                   <h5 className="text-black text-base font-normal leading-6 ml-5 hover:font-medium">
-                    &bull;{attributes.Creator}
+                    &bull;{' '}
+                    {attributes.Creator ? attributes.Creator : 'Not Available'}
                   </h5>
                 </div>
                 <div className="border-b-2 border-gray-400"></div>
                 <div className="flex items-center ">
                   <p className="font-bold w-1/6"> Editor</p>
                   <h5 className="text-black text-base font-normal leading-6 ml-5 hover:font-medium">
-                    &bull; {attributes.Editor}
+                    &bull;{' '}
+                    {attributes.Editor ? attributes.Editor : 'Not Available'}
                   </h5>
                 </div>
                 <div className="border-b-2 border-gray-400"></div>
                 <div className="flex items-center ">
                   <p className="font-bold w-1/6"> Profile</p>
                   <h5 className="text-black text-base font-normal leading-6 ml-5 hover:font-medium">
-                    &bull;{attributes.PROFILE}
+                    &bull;{' '}
+                    {attributes.PROFILE ? attributes.PROFILE : 'Not Available'}
                   </h5>
                 </div>
                 <div className="border-b-2 border-gray-400"></div>
                 <div className="flex items-center overflow-wrap break-word ">
                   <p className="font-bold w-1/6"> Trager</p>
                   <h5 className="text-black text-base font-normal leading-6 ml-5  hover:font-medium transition-colors duration-200">
-                    &bull;{attributes.TRAEGER}
+                    &bull;{' '}
+                    {attributes.TRAEGER ? attributes.TRAEGER : 'Not Available'}
                   </h5>
                 </div>
                 <div className="border-b-2 border-gray-400"></div>
                 <div className="flex items-center overflow-wrap break-word ">
                   <p className="font-bold w-1/6"> Fax</p>
                   <h5 className="text-black text-base font-normal leading-6 ml-5  hover:font-medium transition-colors duration-200">
-                    &bull;{attributes.FAX}
+                    &bull; {attributes.FAX ? attributes.FAX : 'Not Available'}
                   </h5>
                 </div>
                 <div className="border-b-2 border-gray-400"></div>

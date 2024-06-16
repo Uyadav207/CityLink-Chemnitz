@@ -1,5 +1,4 @@
 'use client';
-// src/components/Modal.tsx
 import React from 'react';
 import useModalStore from '@/app/store/modalStore';
 
@@ -10,7 +9,7 @@ const Modal: React.FC = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 backdrop-blur-sm z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
         <h2 className="text-xl font-semibold mb-4">{title}</h2>
         <p className="mb-6">{message}</p>

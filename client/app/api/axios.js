@@ -41,6 +41,17 @@ axiosInstance.interceptors.response.use(
           });
           return false;
         }
+      } else if (err.response && err.response.status === 401) {
+        if (err.response.data.message === 'Invalid token.') {
+          toast.error('Token Expired. Please login again');
+          localStorage.clear();
+          setTimeout(() => {
+            window.location.replace('/login');
+          });
+          return false;
+        } else {
+          toast.error(err.response.data.error);
+        }
       } else if (err.response && err.response.status === 404) {
         // toast.error("Invalid Endpoint. Try again");
         // return false;

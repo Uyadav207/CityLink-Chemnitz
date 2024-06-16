@@ -1,18 +1,13 @@
 'use client';
 
-import { useLoadScript } from '@react-google-maps/api';
-
 import React, { useState, useEffect, useMemo } from 'react';
+import { useLoadScript } from '@react-google-maps/api';
 import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
-
-import {
-  schule,
-  Schulsozialarbeit,
-  Jugendberufshilfe,
-  Kindertageseinrichtungen,
-} from '../../api/apiConfig';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
 import './maps.css';
+
 import convertHomeAddress from '@/app/dashboard/citylink/ConvertAddress';
 import useDataStore from '@/app/store/mapStore';
 import { mapApiUri } from '../../api/mapApi';
@@ -20,6 +15,14 @@ import useUserStore from '@/app/store/userStore';
 import SpringModal from '../SpringModal';
 import CustomToast from '../CustomToast';
 import AddressDropDown from '../Sidebar/AddressDropDown';
+import { Loader } from '../Loader';
+
+import {
+  schule,
+  Schulsozialarbeit,
+  Jugendberufshilfe,
+  Kindertageseinrichtungen,
+} from '../../api/apiConfig';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type DirectionsResult = google.maps.DirectionsResult;
@@ -42,9 +45,7 @@ interface HomeAddress {
 
 function ReactGoogleMaps() {
   const [libraries] = useState<any>(['places']);
-
   const [isExpanded, setIsExpanded] = useState(false);
-
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyAVDnjQErU68GKM_8xD2KzUyAeHwnyqq6Y',
     libraries: libraries,
@@ -60,21 +61,16 @@ function ReactGoogleMaps() {
       mapId: '',
       disableDefaultUI: false,
       clickableIcons: true,
-      //   scrollwheel: false,
-      //   zoomControl: true,
       mapTypeControl: true,
       scaleControl: true,
       zoomControl: false,
       streetViewControl: false,
       rotateControl: true,
       fullscreenControl: true,
-      //   draggable: false,
-      //   keyboardShortcuts: false,
     }),
     []
   );
 
-  const [showPopup, setShowPopup] = useState<boolean>(true);
   const {
     userData,
     currentCategory,
@@ -83,13 +79,9 @@ function ReactGoogleMaps() {
     setSelectedFacility,
   } = useUserStore();
 
-  // const addresses = convertHomeAddress(userData?.addresses) || '';
-  let homeAddress: HomeAddress[] = [];
-
   const [features, setFeatures] = useState<Feature[]>([]);
   const [api, setApi] = useState<string>('');
   const [info, setInfo] = useState<{ [key: string]: any }>({});
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [address, setAddress] = useState<string>('');
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [addressList, setAddressList] = useState<HomeAddress[]>([]);
@@ -97,14 +89,9 @@ function ReactGoogleMaps() {
 
   const apiKey = 'AIzaSyBVXnBh_mZfwQDtubQkMtLOZJvw4GM5fnc';
 
-  const [mapRef, setMapRef] = useState();
-
-  const { setMapDirections } = useDataStore();
+  const [mapRef, setMapRef] = useState<any>();
 
   const onLoad = (map: any) => {
-    // features?.forEach(({ geometry }) =>
-    //   bounds.extend({ lat: geometry.y, lng: geometry.x })
-    // );
     setMapRef(map);
   };
 
@@ -123,18 +110,18 @@ function ReactGoogleMaps() {
     }
   };
 
-  const { setHomeCoords, setData } = useDataStore();
+  const { setHomeCoords, setData, setLoader } = useDataStore();
 
-  const [currentPosition, setCurrentPosition] = useState(null);
+  const [currentPosition, setCurrentPosition] = useState<any>(null);
 
-  const fetchDirections = (house: LatLngLiteral) => {
+  const fetchDirections = (facility: LatLngLiteral) => {
     if (!currentPosition) return;
 
     const service = new google.maps.DirectionsService();
     service.route(
       {
-        origin: { lat: 50.8181199, lng: 12.9304204 },
-        destination: house,
+        origin: currentPosition,
+        destination: facility,
         travelMode: google.maps.TravelMode.DRIVING,
       },
       (result, status) => {
@@ -162,12 +149,11 @@ function ReactGoogleMaps() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log('position---------', position);
-
           const { latitude, longitude } = position.coords;
           setCurrentPosition({ lat: latitude, lng: longitude });
+          setHomeCoords({ lat: latitude, lng: longitude });
           if (mapRef) {
-            mapRef?.setZoom(20);
+            mapRef?.setZoom(14);
             mapRef?.panTo({ lat: latitude, lng: longitude });
           }
         },
@@ -178,25 +164,23 @@ function ReactGoogleMaps() {
     }
   };
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log('position---------', position);
-
-          const { latitude, longitude } = position.coords;
-          setCurrentPosition({ lat: latitude, lng: longitude });
-          if (mapRef) {
-            mapRef?.setZoom(20);
-            mapRef?.panTo({ lat: latitude, lng: longitude });
-          }
-        },
-        (error) => {
-          console.error('Error getting current position:', error);
-        }
-      );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const { latitude, longitude } = position.coords;
+  //         setCurrentPosition({ lat: latitude, lng: longitude });
+  //         if (mapRef) {
+  //           mapRef?.setZoom(14);
+  //           mapRef?.panTo({ lat: latitude, lng: longitude });
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error('Error getting current position:', error);
+  //       }
+  //     );
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (userData) {
@@ -219,6 +203,7 @@ function ReactGoogleMaps() {
     const fetchData = async () => {
       if (api) {
         try {
+          setLoader(true);
           const response = await fetch(api);
           const data = await response.json();
 
@@ -226,16 +211,17 @@ function ReactGoogleMaps() {
           setData(data.features);
         } catch (error) {
           console.error('Error fetching data:', error);
+        } finally {
+          setLoader(false);
         }
       }
     };
     fetchData();
-    if (address) handleGeocode(address);
   }, [api, address]);
 
   const showInfoOnClick = (obj: { [key: string]: any }) => {
     setInfo(obj);
-    setIsModalOpen(true);
+    // setIsModalOpen(true);
   };
 
   const handleApiTrigger = (requestedAPI: string) => {
@@ -244,33 +230,28 @@ function ReactGoogleMaps() {
 
   const handleGeocode = async (address: string) => {
     try {
-      const coords: Coordinates = await getGeocode(address, apiKey);
+      const coords: any = await getGeocode(address, apiKey);
       setCoordinates(coords);
       setHomeCoords(coords);
+      setCurrentPosition(coords);
+      mapRef?.setZoom(14);
+      mapRef?.panTo(coords);
     } catch (error) {
       console.error('Error fetching geocode:', error);
     }
   };
 
   const handleClickGeolocation = (addressName: string) => {
-    setAddress(addressName);
+    handleGeocode(addressName);
   };
 
-  //   console.log('featuressss', features);
-
-  const handleMarkerClick = (lat, lng) => {
-    mapRef?.setZoom(16);
+  const handleMarkerClick = (lat: number, lng: number) => {
+    mapRef?.setZoom(14);
     mapRef?.panTo({ lat, lng });
   };
 
-  const [selectedMarker, setSelectedMarker] = useState<any>(null);
-
-  const handleExpand = (lat, lng) => {
-    // mapRef?.setZoom(15);
-    // mapRef?.panTo({ lat, lng });
+  const handleExpand = () => {
     setIsExpanded(true);
-
-    // setIsExpanded(true);
   };
 
   const handleCollapse = (event: any) => {
@@ -280,10 +261,12 @@ function ReactGoogleMaps() {
   };
 
   return !isLoaded ? (
-    <div>Loading...</div>
+    <div>
+      <Loader />
+    </div>
   ) : (
     <>
-      <div className="map">
+      <div className="relative map">
         <GoogleMap
           zoom={14}
           center={center}
@@ -308,53 +291,57 @@ function ReactGoogleMaps() {
             <Marker
               key={index}
               position={{ lat: feature.geometry.y, lng: feature.geometry.x }}
+              // icon={{
+              //   url: 'https://cdn-icons-png.flaticon.com/32/2602/2602414.png',
+              // }}
               icon={
                 currentCategory === 'SCHULE'
                   ? {
-                      url: 'https://cdn-icons-png.flaticon.com/32/11542/11542151.png',
-
-                      scaledSize: new google.maps.Size(30, 30),
+                      url: 'https://cdn-icons-png.flaticon.com/32/2602/2602414.png',
                     }
-                  : {
-                      url: 'https://cdn-icons-png.flaticon.com/32/6162/6162025.png',
-
-                      scaledSize: new google.maps.Size(20, 20),
+                  : currentCategory === 'SCHULSOZIALARBEIT'
+                  ? {
+                      url: 'https://cdn-icons-png.flaticon.com/32/3264/3264758.png',
                     }
+                  : currentCategory === 'KINDERTAGESEINRICHTUNGEN'
+                  ? {
+                      url: 'https://cdn-icons-png.flaticon.com/32/1702/1702342.png',
+                    }
+                  : (currentCategory === 'JUGENDBERUFSHILFE' && {
+                      url: 'https://cdn-icons-png.flaticon.com/32/1312/1312511.png',
+                    }) ||
+                    ''
               }
               onClick={() => {
-                setSelectedMarker(feature);
                 handleMarkerClick(feature.geometry.y, feature.geometry.x);
                 showInfoOnClick(feature);
-                handleExpand(feature.geometry.y, feature.geometry.x);
+                handleExpand();
               }}
             ></Marker>
           ))}
 
           {currentPosition && (
             <Marker
-              //   onClick={() => {
-              //     handleMarkerClick(currentPosition.lat, feature.geometry.x);
-              //   }}
               position={currentPosition}
               icon={{
-                url: 'https://cdn-icons-png.flaticon.com/32/1865/1865269.png',
+                url: 'https://cdn-icons-png.flaticon.com/32/889/889668.png',
               }}
             ></Marker>
           )}
 
-          <div className="absolute bottom-10 flex space-x-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2">
+          <div className=" fixed  bottom-0 sm:bottom-10 flex flex-col sm:flex-row  space-x-4 left-1/2 md:left-[55%] transform -translate-x-1/2 -translate-y-1/2 md:w-1/2 text-xs md:text-base">
             <button
-              className="flex-1 btn bg-white shadow-l"
+              className="flex-1 hover:bg-red-600 hover:text-white rounded-lg  border border-black shadow-2xl bg-white shadow-l text-red-600 font-bold p-2"
               onClick={() => {
                 handleApiTrigger(schule);
                 setCurrentCategory('SCHULE');
                 setSelectedFacility('');
               }}
             >
-              schule
+              Schule
             </button>
             <button
-              className="flex-1 btn bg-white shadow-l"
+              className="flex-1 hover:bg-blue-600 hover:text-white rounded-lg bg-white border border-black shadow-2xl text-blue-600 font-bold  p-2"
               onClick={() => {
                 handleApiTrigger(Schulsozialarbeit);
                 setCurrentCategory('SCHULSOZIALARBEIT');
@@ -363,7 +350,7 @@ function ReactGoogleMaps() {
               Schulsozialarbeit
             </button>
             <button
-              className="flex-1 btn bg-white shadow-l"
+              className="flex-1 hover:bg-green-600 hover:text-white rounded-lg \ border border-black shadow-2xl bg-white shadow-l text-green-600 font-bold p-2"
               onClick={() => {
                 handleApiTrigger(Kindertageseinrichtungen);
                 setCurrentCategory('KINDERTAGESEINRICHTUNGEN');
@@ -372,7 +359,7 @@ function ReactGoogleMaps() {
               Kindertageseinrichtungen
             </button>
             <button
-              className="flex-1 btn bg-white shadow-l"
+              className="flex-1 hover:bg-violet-600 hover:text-white rounded-lg  border border-black shadow-2xl bg-white shadow-l text-violet-600 font-bold p-2"
               onClick={() => {
                 handleApiTrigger(Jugendberufshilfe);
                 setCurrentCategory('JUGENDBERUFSHILFE');
@@ -382,20 +369,30 @@ function ReactGoogleMaps() {
             </button>
           </div>
 
-          <div className="absolute top-0">
-            <SpringModal
-              fetchDirections={fetchDirections}
-              info={info}
-              isOpen={isExpanded}
-              setIsOpen={setIsExpanded}
-            />
-          </div>
+          <SpringModal
+            fetchDirections={fetchDirections}
+            info={info}
+            isOpen={isExpanded}
+            setIsOpen={setIsExpanded}
+          />
         </GoogleMap>
-        <div className="absolute top-10 left-[40%] ">
+        <div className="absolute top-20 md:top-10 left-[40%]  ">
           <AddressDropDown>
+            <p
+              onClick={() => getCurrentLocation()}
+              className="cursor-pointer p-2 hover:font-bold  "
+            >
+              <span className="mr-2">
+                <FontAwesomeIcon size="lg" icon={faCrosshairs} color="black" />
+              </span>
+              Use current location
+            </p>
             {addressList &&
               addressList.map((item) => (
-                <li key={item.id} className="menu-title">
+                <li
+                  key={item.id}
+                  className="menu-title text-black hover:bg-slate-200"
+                >
                   <button
                     onClick={() => handleClickGeolocation(item.name)}
                     className="flex items-center space-x-2"
