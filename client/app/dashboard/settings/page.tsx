@@ -21,7 +21,7 @@ import {
 } from './constants';
 
 import { settingsApi } from '@/app/api/settings';
-import withAuth from '@/app/helpers/protectedRoute';
+import IsAuth from '@/app/helpers/protectedRoute';
 
 const Settings = () => {
   const router = useRouter();
@@ -589,4 +589,4 @@ const Settings = () => {
   );
 };
 
-export default withAuth(Settings);
+export default IsAuth(Settings);

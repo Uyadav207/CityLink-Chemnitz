@@ -112,7 +112,7 @@ const List = ({ loading, setLoading }: ListProps) => {
     // Show skeletons while data is loading
     return (
       <div>
-        <div className="min-h-[200px]"></div>
+        <div className="min-h-[100px]"></div>
         <ul>
           {Array(8)
             .fill(0)
@@ -188,14 +188,11 @@ const List = ({ loading, setLoading }: ListProps) => {
         </div>
       ) : (
         <>
-          <div className="border border-b my-4 "></div>
+          <div className="border border-b mt-4 "></div>
 
-          <div
-            id="scrollableDiv"
-            className="px-2  overflow-y-scroll h-[55vh] shadow-lg"
-          >
+          <div id="scrollableDiv" className="px-2  overflow-y-scroll h-[55vh]">
             {loader && dataApi ? (
-              <div className="h-[65vh] flex items-center justify-center">
+              <div className="h-[50vh] flex items-center justify-center ">
                 <Scaleloader />
               </div>
             ) : (

@@ -6,11 +6,16 @@ import Logout from './Logout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 
-const Sidebar = ({ show, setter }) => {
+type SidebarProps = {
+  show: boolean;
+  setter: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Sidebar = ({ show, setter }: SidebarProps) => {
   const [loading, setLoading] = useState(true);
 
   const className =
-    'bg-white w-[350px] transition-[margin-left] ease-in-out duration-500  fixed md:static';
+    'bg-white w-[350px] transition-[margin-left] ease-in-out duration-500 z-50  fixed md:static';
 
   const appendClass = show ? ' ml-0' : ' ml-[-350px] md:ml-0';
 

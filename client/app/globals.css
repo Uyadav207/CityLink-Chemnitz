@@ -82,7 +82,7 @@
 
 #scrollableDiv::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: #e6e6e6c9;
+  background-color: #e6e6e67b;
   border: 2px solid #e6e6e6c9;
 }
 

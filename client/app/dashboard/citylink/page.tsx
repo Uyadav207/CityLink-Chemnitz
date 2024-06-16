@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import ReactGoogleMaps from '@/app/components/ReactGoogleMaps';
 import MobileView from '@/app/components/Sidebar/MobileView';
-import withAuth from '@/app/helpers/protectedRoute';
+import isAuth from '@/app/helpers/protectedRoute';
+import { NextPage } from 'next';
 
-const App: React.FC = () => {
+const CityLink: NextPage = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   return (
-    <div className="flex relative">
+    <div className="flex relative ">
       <MobileView setter={setShowSidebar} />
       <Sidebar show={showSidebar} setter={setShowSidebar} />
       <ReactGoogleMaps />
@@ -17,4 +18,4 @@ const App: React.FC = () => {
   );
 };
 
-export default withAuth(App);
+export default isAuth(CityLink);

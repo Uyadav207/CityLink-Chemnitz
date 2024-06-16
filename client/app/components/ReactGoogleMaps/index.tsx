@@ -164,23 +164,23 @@ function ReactGoogleMaps() {
     }
   };
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setCurrentPosition({ lat: latitude, lng: longitude });
-          if (mapRef) {
-            mapRef?.setZoom(14);
-            mapRef?.panTo({ lat: latitude, lng: longitude });
-          }
-        },
-        (error) => {
-          console.error('Error getting current position:', error);
-        }
-      );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const { latitude, longitude } = position.coords;
+  //         setCurrentPosition({ lat: latitude, lng: longitude });
+  //         if (mapRef) {
+  //           mapRef?.setZoom(14);
+  //           mapRef?.panTo({ lat: latitude, lng: longitude });
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error('Error getting current position:', error);
+  //       }
+  //     );
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (userData) {
