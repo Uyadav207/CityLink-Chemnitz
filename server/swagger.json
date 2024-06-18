@@ -1,0 +1,16 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "City Link API Documentation",
+      "version": "1.0.0",
+      "description": "API documentation for City Link Chemnitz application"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8080",
+        "description": "Local server"
+      }
+    ],
+    "paths": {}
+  }
+  
