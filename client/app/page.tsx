@@ -8,10 +8,12 @@ const Home: React.FC = () => {
     <>
       <Navbar />
       <Hero />
-      <div className="p-4">
-        <h1 className="text-center text-5xl font-bold">Categories</h1>
+      <div className="border border-white p-4">
+        <h1 className="text-center text-2xl lg:text-5xl font-bold">
+          Categories
+        </h1>
 
-        <div className="grid grid-cols-2 gap-8 p-4 mt-8 w-1/2 mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 mt-8 w-full sm:w-3/4 mx-auto">
           <div className="w-full px-2 mb-4">
             <div className="w-full h-full bg-grey shadow-lg text-center p-8">
               <h3 className="mb-4">Title</h3>
