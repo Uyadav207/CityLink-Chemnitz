@@ -25,7 +25,7 @@ function IsAuth<T>(Component: React.ComponentType<T>) {
           setLoader(false);
         }
       }
-    }, []);
+    }, [userData]);
 
     return (
       <>
