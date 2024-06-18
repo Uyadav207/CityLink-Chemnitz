@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { authApis } from '../../api/auth';
 
 import { Input } from '../Inputs';
@@ -70,6 +71,12 @@ const UserLogin = () => {
                   </button>
                 </Form>
               </Formik>
+              <p className="my-2">
+                Do not have an account?{' '}
+                <Link href="/signUp">
+                  <span className="text-blue-500">Register</span>
+                </Link>
+              </p>
             </div>
           </div>
         </div>

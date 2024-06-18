@@ -41,7 +41,9 @@ const Settings = () => {
       const response = await settingsApi.editUserDetails(userData.id, values);
       toast.success(response.data.message);
       setEditClicked(true);
-      setUser(response.data.user);
+      console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqq', response.data);
+
+      setUser(response.data.updatedUser);
     } catch (err: any) {
       console.log('erorr', err.response);
     } finally {
@@ -511,7 +513,7 @@ const Settings = () => {
                             <div className="px-3 w-full flex  mt-8 ">
                               <button
                                 type="submit"
-                                className="btn w-1/4 btn-outline btn-accent"
+                                className="btn w-full md:w-1/4 btn-outline btn-accent"
                               >
                                 Edit Address
                               </button>
@@ -522,7 +524,7 @@ const Settings = () => {
                     </Formik>
                   )) ||
                   (editAddress === false && addAddress === false && (
-                    <div className="grid grid-cols-3 gap-8 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
                       {userData &&
                         userData.addresses.map(
                           (

@@ -43,7 +43,7 @@ const CustomToast = ({ result }: { result: any }) => {
       </div>
     ),
     {
-      duration: 500,
+      duration: Infinity,
       position: 'top-right',
     }
   );
