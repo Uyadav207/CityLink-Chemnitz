@@ -12,6 +12,9 @@ const Hero = () => {
       <div className="relative flex items-center justify-center w-full h-full">
         <section className="content bg-opacity-60">
           <h1>City Link</h1>
+          <p className="text-white text-xl my-4">
+            An interactive Map UI to locate nearby facilities
+          </p>
           <Link href="/signUp" className="homebtn light"></Link>
         </section>
       </div>

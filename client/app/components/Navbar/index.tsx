@@ -6,19 +6,22 @@ import './Navbar.css';
 const Navbar = () => {
   return (
     <header className="p-4  bg-black/20">
-      <a href="#">
-        <img
-          src="https://github.com/ecemgo/today-i-learned-app/assets/13468728/4f2923ea-9eca-4221-8b18-7198f78fd04e"
-          alt="logo"
-          className="logo"
-        />
-      </a>
+      <div className="flex items-center justify-start">
+        <a href="#">
+          <img
+            src="https://github.com/ecemgo/today-i-learned-app/assets/13468728/4f2923ea-9eca-4221-8b18-7198f78fd04e"
+            alt="logo"
+            className="logo"
+          />
+        </a>
 
-      <a href="#" className="nav-item">
-        About
-      </a>
-      <a href="#" className="nav-item">
-        Github
+        <a href="#" className="nav-item">
+          Github
+        </a>
+      </div>
+
+      <a href="#" className="nav-item border border-white p-2 rounded-lg">
+        Login
       </a>
     </header>
   );
