@@ -11,6 +11,8 @@
  *   get:
  *     summary: Get all users
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: A list of users
@@ -41,10 +43,12 @@
 
 /**
  * @swagger
- * /user/users/edit/{id}:
+ * /user/edit/{id}:
  *   put:
  *     summary: Edit user information
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -80,10 +84,12 @@
 
 /**
  * @swagger
- * /user/users/edit/address/{userId}:
+ * /user/edit/address/{userId}:
  *   put:
  *     summary: Edit user address
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -119,10 +125,12 @@
 
 /**
  * @swagger
- * /user/users/delete/address/{userId}/{addressId}:
+ * /user/delete/address/{userId}/{addressId}:
  *   delete:
  *     summary: Delete user address
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -145,10 +153,12 @@
 
 /**
  * @swagger
- * /user/users/delete/{id}:
+ * /user/delete/{id}:
  *   delete:
  *     summary: Delete user (soft delete)
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -165,10 +175,12 @@
 
 /**
  * @swagger
- * /user/users/deleted:
+ * /user/deleted:
  *   get:
  *     summary: Lists deleted users
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Deleted users retrieved successfully
@@ -178,10 +190,12 @@
 
 /**
  * @swagger
- * /user/users/change-type/{id}:
+ * /user/change-type/{id}:
  *   put:
  *     summary: Change user type
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -208,10 +222,12 @@
 
 /**
  * @swagger
- * /user/users/address/{userId}:
+ * /user/address/{userId}:
  *   post:
  *     summary: Add home address for a regular or super user
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -245,10 +261,12 @@
 
 /**
  * @swagger
- * /user/users/favourite/facility/{userId}:
+ * /user/favourite/facility/{userId}:
  *   post:
  *     summary: Toggle favourite facility for a user
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
