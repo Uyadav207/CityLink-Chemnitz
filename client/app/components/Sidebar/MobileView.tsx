@@ -3,6 +3,7 @@ import Image from 'next/image';
 import UserAvatar from '../UserAvatar';
 import Link from 'next/link';
 import useUserStore from '@/app/store/userStore';
+import useModalStore from '@/app/store/modalStore';
 
 type MobileViewProps = {
   setter: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,6 +11,27 @@ type MobileViewProps = {
 
 export default function MobileView({ setter }: MobileViewProps) {
   const { userData } = useUserStore();
+
+  const { logout } = useUserStore();
+  const { setIsOpen, setModalData } = useModalStore();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('mapData');
+    window.location.href = '/login';
+  };
+
+  const openModal = () => {
+    setModalData(
+      'Confirm Logout',
+      'Are you sure you want to logout?',
+      handleLogout
+    );
+    setIsOpen(true);
+  };
+
   return (
     <>
       <div className="md:hidden z-20 fixed top-0 left-0 right-0 h-[60px] navbar bg-base-100 flex [&>*]:my-auto px-2">
@@ -61,7 +83,7 @@ export default function MobileView({ setter }: MobileViewProps) {
               <li>
                 <Link href="/dashboard/settings">Settings</Link>
               </li>
-              <li>
+              <li onClick={openModal}>
                 <a>Logout</a>
               </li>
             </ul>

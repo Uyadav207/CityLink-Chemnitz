@@ -7,22 +7,27 @@ const Navbar = () => {
   return (
     <header className="p-4  bg-black/20">
       <div className="flex items-center justify-start">
-        <a href="#">
-          <img
-            src="https://github.com/ecemgo/today-i-learned-app/assets/13468728/4f2923ea-9eca-4221-8b18-7198f78fd04e"
-            alt="logo"
-            className="logo"
-          />
-        </a>
+        <img
+          src="https://cdn-icons-png.flaticon.com/32/12300/12300557.png"
+          alt="logo"
+          className="w-10 h-10"
+        />
 
-        <a href="#" className="nav-item">
+        <a
+          href="https://github.com/Uyadav207/CityLink-Chemnitz"
+          target="_blank"
+          className="nav-item"
+        >
           Github
         </a>
       </div>
 
-      <a href="#" className="nav-item border border-white p-2 rounded-lg">
+      <Link
+        href="/login"
+        className="nav-item border border-white p-2 rounded-lg"
+      >
         Login
-      </a>
+      </Link>
     </header>
   );
 };

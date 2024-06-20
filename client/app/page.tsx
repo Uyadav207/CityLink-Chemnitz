@@ -9,22 +9,11 @@ const Home: React.FC = () => {
       <Navbar />
       <Hero />
       <div className="border border-white p-4">
-        <h1 className="text-center text-2xl lg:text-5xl font-bold bg-gradient-to-r from-blue-300 via-blue-800 to-blue-200 bg-clip-text text-transparent">
+        <h1 className="text-center text-2xl lg:text-5xl font-bold bg-gradient-to-r from-black via-black-800 to-blue-200 bg-clip-text text-transparent">
           Facilities
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 mt-8 w-full sm:w-3/4 mx-auto">
-          {/* <div className="w-full px-2 mb-4">
-            <div className="w-full h-full bg-grey shadow-lg text-center p-8">
-              <h3 className="mb-4">Schule</h3>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Possimus eveniet eum earum reprehenderit distinctio minus, magni
-                nemo alias maiores, illum quasi natus? Quam deleniti rerum
-                suscipit id. Eaque, esse totam?
-              </p>
-            </div>
-          </div> */}
           <div
             className={`transition-all duration-200 ease-in-out transform 
                hover:scale-105
@@ -47,7 +36,7 @@ const Home: React.FC = () => {
               <a
                 href="https://portal-chemnitz.opendata.arcgis.com/datasets/chemnitz::schulen/about"
                 target="_blank"
-                className="px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
+                className="hover:text-white px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
               >
                 Learn more
               </a>
@@ -76,7 +65,7 @@ const Home: React.FC = () => {
               <a
                 href="https://portal-chemnitz.opendata.arcgis.com/datasets/chemnitz::kindertageseinrichtungen/about"
                 target="_blank"
-                className="px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
+                className="hover:text-white px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
               >
                 Learn more
               </a>
@@ -103,7 +92,7 @@ const Home: React.FC = () => {
               <a
                 href="https://portal-chemnitz.opendata.arcgis.com/datasets/chemnitz::schulsozialarbeit/about"
                 target="_blank"
-                className="px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
+                className=" hover:text-white px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
               >
                 Learn more
               </a>
@@ -130,7 +119,7 @@ const Home: React.FC = () => {
               <a
                 href="https://portal-chemnitz.opendata.arcgis.com/datasets/chemnitz::jugendberufshilfen/about"
                 target="_blank"
-                className="px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
+                className="hover:text-white px-3 py-1 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-800 rounded-full"
               >
                 Learn more
               </a>

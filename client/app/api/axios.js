@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { getUserTokenFromLocalStorage } from '../helpers/crypto';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: process.env.NEXT_PUBLIC_NODE_URL,
 });
 
 // Request interceptor

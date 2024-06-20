@@ -1,14 +1,7 @@
-const Jugendberufshilfe = 'http://localhost:8080/apis/api/jugendberufshilfe';
-const schule = 'http://localhost:8080/apis/api/schule';
+import axios from './axios';
 
-const Kindertageseinrichtungen =
-  'http://localhost:8080/apis/api/kindertageseinrichtungen';
+const getFacilities = (facility) => axios.get(`apis/api/${facility}`);
 
-const Schulsozialarbeit = 'http://localhost:8080/apis/api/schulsozialarbeit';
-
-module.exports = {
-  Jugendberufshilfe,
-  schule,
-  Kindertageseinrichtungen,
-  Schulsozialarbeit,
+export const mapDataApis = {
+  getFacilities,
 };
