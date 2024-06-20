@@ -26,7 +26,7 @@ const List = ({ loading, setLoading }: ListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [noResults, setNoResults] = useState(false);
-  const [isClick, setClick] = useState(false);
+  const [, setClick] = useState(false);
   const {
     userData,
     currentCategory,
@@ -75,37 +75,11 @@ const List = ({ loading, setLoading }: ListProps) => {
       }
 
       setFilteredData(filtered); // Limit to the first 10 elements
-
-      // fetchDirections({
-      //   lat: filtered[0].geometry.y,
-      //   lng: filtered[0].geometry.x,
-      // });
     }
   }, [dataApi, loading, searchTerm]);
 
   const handleSearch = (event: any) => {
     setSearchTerm(event.target.value);
-  };
-
-  const fetchDirections = (facility: LatLngLiteral): any => {
-    console.log('aaaaaaaaaaaaaaaaaa', facility);
-
-    if (!homeCoords) return 'q';
-
-    const service = new google.maps.DirectionsService();
-
-    service.route(
-      {
-        origin: homeCoords,
-        destination: facility,
-        travelMode: google.maps.TravelMode.DRIVING,
-      },
-      (result, status) => {
-        if (status === 'OK' && result) {
-          console.log(result);
-        }
-      }
-    );
   };
 
   if (loading || !dataApi) {
@@ -161,8 +135,6 @@ const List = ({ loading, setLoading }: ListProps) => {
     }
   };
 
-  console.log(dataApi, 'dataApi');
-
   return (
     <div className="sidebar">
       <div className="px-4">
@@ -217,16 +189,6 @@ const List = ({ loading, setLoading }: ListProps) => {
                           : currentCategory + '-' + Number(index + 1)}
                       </h1>
                       <p className="text-sm text-gray-500 truncate">
-                        {/* <span className="text-green-400">
-                      {calculateDistance(
-                        data.geometry.y,
-                        data.geometry.x,
-                        homeCoords.lat,
-                        homeCoords.lng
-                      ).toFixed(2)}{' '}
-                      Km
-                    </span> */}
-
                         <span className="text-black"> • </span>
                         <span className="truncate">
                           {data.attributes.STRASSE}

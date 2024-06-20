@@ -39,7 +39,6 @@ async function fetchFromApi(apiConfig) {
 async function fetchData() {
   try {
     const allData = await Promise.all(API_URLS.map(fetchFromApi));
-    // console.log(allData);
     return allData; // Return data along with schema info
   } catch (error) {
     console.error('Error fetching data from APIs:', error);

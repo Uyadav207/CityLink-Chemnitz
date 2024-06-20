@@ -13,9 +13,11 @@ const Logout: React.FC = () => {
 
   const handleLogout = () => {
     logout();
+
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('mapData');
+    localStorage.removeItem('userData');
     window.location.href = '/login';
   };
 

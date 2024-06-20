@@ -41,8 +41,6 @@ const Settings = () => {
       const response = await settingsApi.editUserDetails(userData.id, values);
       toast.success(response.data.message);
       setEditClicked(true);
-      console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqq', response.data);
-
       setUser(response.data.updatedUser);
     } catch (err: any) {
       console.log('erorr', err.response);
@@ -62,7 +60,6 @@ const Settings = () => {
       setAddAddress(false);
       setEditAddress(false);
       setUser(response.data.updatedUser);
-      console.log(response.data.updatedUser);
     } catch (err: any) {
       console.log('erorr', err.response);
     } finally {
@@ -73,7 +70,6 @@ const Settings = () => {
   const handleEditAddress = async (values: any) => {
     try {
       setLoader(true);
-      console.log(values);
       const response = await settingsApi.updateAddress(userData.id, values);
       toast.success(response.data.message);
       setAddAddress(false);
@@ -94,7 +90,6 @@ const Settings = () => {
   const handleEditClicked = async (index: any) => {
     setEditAddress(true);
     setIndex(index);
-    console.log(index);
   };
 
   const handleDeleteAddress = async (id: number, addressId: number) => {
@@ -113,16 +108,11 @@ const Settings = () => {
   const handleUserTypeChange = async () => {
     try {
       setLoader(true);
-      console.log(userData.userType);
-
       const payload = {
         userType: userData.userType === 'REGULAR' ? 'SUPER' : 'REGULAR',
       };
-
       const response = await settingsApi.switchUserMode(userData.id, payload);
       toast.success(response.data.message);
-      console.log('response', response.data);
-
       setUser(response.data.user);
       setEditClicked(true);
     } catch (err: any) {
@@ -358,12 +348,7 @@ const Settings = () => {
                     validationSchema={CONTACT_VALIDATION}
                     onSubmit={handleAddContact}
                   >
-                    {({ setValues, values }) => {
-                      useEffect(() => {
-                        if (userData) {
-                          console.log(userData);
-                        }
-                      }, [userData]);
+                    {({ values }) => {
                       return (
                         <Form>
                           <div className="flex flex-wrap justify-around">
@@ -441,8 +426,6 @@ const Settings = () => {
                       {({ setValues, values }) => {
                         useEffect(() => {
                           if (userData) {
-                            console.log(userData);
-                            console.log(index);
                             const address = userData.addresses[index];
                             setValues((values) => ({
                               ...values,

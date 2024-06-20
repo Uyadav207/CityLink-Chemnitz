@@ -44,7 +44,7 @@ const SpringModal = ({
             }}
             exit={{ scale: 0, rotate: '0deg' }}
             onClick={(e) => e.stopPropagation()}
-            className="fixed top-[20%] left-[30%] lg:left-[40%] transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br bg-white p-6 rounded-lg w-[90%] md:w-[60%] lg:w-[50%] xl:w-[30%]  shadow-2xl  "
+            className="fixed top-[20%] md:left-[30%] lg:left-[40%] transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br bg-white p-6 rounded-lg w-[90%] md:w-[60%] lg:w-[50%] xl:w-[30%]  shadow-2xl  "
           >
             <div
               onClick={() => setIsOpen(false)}

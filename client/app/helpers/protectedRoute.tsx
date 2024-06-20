@@ -10,12 +10,10 @@ import ToastMessage from '../components/Toast';
 function IsAuth<T>(Component: React.ComponentType<T>) {
   return (props: T) => {
     const [loader, setLoader] = useState(true);
-    // make a api call to check if user is authenticated
+    // check localstorage for user token
     const { userData } = useUserStore();
     const router = useRouter();
     useEffect(() => {
-      console.log(userData);
-
       if (typeof window !== undefined) {
         const token = localStorage.getItem('token');
         if (!token) {
