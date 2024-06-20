@@ -29,9 +29,9 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API Documentation',
+      title: 'CityLink API Documentation',
       version: '1.0.0',
-      description: 'API documentation for the Node.js application',
+      description: 'API documentation for the CityLink Chemnitz',
     },
     components: {
       securitySchemes: {
