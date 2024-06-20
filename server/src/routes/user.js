@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const authenticateJWT = require('../middleware/authMiddleware');
 
 // Get all users
-router.get('/users', async (req, res) => {
+router.get('/users',  async (req, res) => {
   try {
     const users = await prisma.user.findMany({
       include: { addresses: true, favouriteFacilities: true },
@@ -21,43 +21,74 @@ router.get('/users', async (req, res) => {
 // Edit user information
 router.put('/edit/:id', authenticateJWT, async (req, res) => {
   const { id } = req.params;
-  const { username, password, firstName, lastName, phoneNo, email } = req.body;
+  const { username, firstName, lastName, phoneNo, email } = req.body;
+  
   try {
+    // Check if the user exists
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update user information
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(id) },
-      data: { username, password, firstName, lastName, phoneNo, email },
-      include: { addresses: true, favouriteFacilities: true } ,
+      data: { username, firstName, lastName, phoneNo, email },
+      include: { addresses: true, favouriteFacilities: true },
     });
+
     res.json({ message: 'User updated successfully', updatedUser });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: 'Cannot update user', details: error.message });
+    res.status(500).json({ error: 'Cannot update user', details: error.message });
   }
 });
+
 
 // Edit user address
 router.put('/edit/address/:userId', authenticateJWT, async (req, res) => {
   const { userId } = req.params;
   const { street, city, state, zipCode, country, id } = req.body;
+  
   try {
+    // Check if the user exists
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the address exists for the user
+    const address = await prisma.address.findUnique({
+      where: { userId: parseInt(userId), id: parseInt(id) },
+    });
+
+    if (!address) {
+      return res.status(404).json({ error: 'Address not found' });
+    }
+
+    // Update address information
     await prisma.address.update({
       where: { userId: parseInt(userId), id: parseInt(id) },
       data: { street, city, state, zipCode, country },
     });
 
+    // Fetch updated user details including addresses and favourite facilities
     const updatedUser = await prisma.user.findUnique({
       where: { id: parseInt(userId) },
       include: { addresses: true, favouriteFacilities: true },
     });
 
-    res.status(200).json({ message: 'Address updated successfully', updatedUser});
+    res.status(200).json({ message: 'Address updated successfully', updatedUser });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: 'Cannot update address', details: error.message });
+    res.status(500).json({ error: 'Cannot update address', details: error.message });
   }
 });
+
 
 // DELETE route to remove an address based on userId and address id
 router.delete('/delete/address/:userId/:addressId', authenticateJWT, async (req, res) => {
@@ -73,7 +104,7 @@ router.delete('/delete/address/:userId/:addressId', authenticateJWT, async (req,
     });
 
     if (!address) {
-      return res.status(401).json({ error: 'Address not found' });
+      return res.status(404).json({ error: 'Address not found' });
     }
 
     // Delete the address
