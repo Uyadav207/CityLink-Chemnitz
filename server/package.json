@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
-    "start": "node ./src/server.js && node ./src/jobs/updateDatabase.js"
+    "start": "npx prisma generate | npx prisma migrate deploy | node ./src/jobs/updateDatabase.js | node ./src/server.js"
   },
   "author": "\"Utkarsh Yadav and Nithin Valiyaveedu\"",
   "license": "Apache-2.0",
